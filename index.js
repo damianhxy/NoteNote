@@ -302,7 +302,7 @@ app.get("/profile/:userID", function(req, res, next) {
     .then(function(theuser) {
         res.render("profile", {
             user: req.user,
-            theuser: scope.theuser,
+            theuser: theuser,
             posts: scope.posts,
             isFollower: ~ scope.followers.indexOf(req.user.username),
             followerCount: scope.followers.length
