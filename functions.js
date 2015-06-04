@@ -408,4 +408,17 @@ exports.searchTags = function(tag, offset) {
             else deferred.reject(args);
         });
     });
+    return deferred.promise;
+};
+
+exports.getUserByID = function(user) {
+	var deferred = Q.defer();
+	userDB.loadDatabase(function(err) {
+		if (err) deferred.reject("LOAD ERROR");
+		else userDB.findOne({username: user}, function(err, result) {
+			if (err) deferred.reject("FIND ERROR");
+			else deferred.resolve(result);
+		});
+	});
+	return deferred.promise;
 };

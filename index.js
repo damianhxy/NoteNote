@@ -296,11 +296,16 @@ app.get("/profile/:userID", function(req, res, next) {
         return func.getFollowed(req.params.userID);
     })
     .then(function(followers) {
+		scope.followers = followers;
+		return func.getUserByID(req.params.userID);
+	})
+    .then(function(theuser) {
         res.render("profile", {
             user: req.user,
+            theuser: scope.theuser,
             posts: scope.posts,
-            isFollower: ~ followers.indexOf(req.user.username),
-            followerCount: followers.length
+            isFollower: ~ scope.followers.indexOf(req.user.username),
+            followerCount: scope.followers.length
         });
     })
     .fail(function(err) {
