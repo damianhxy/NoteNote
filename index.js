@@ -1,6 +1,6 @@
 var exphbs = require("express-handlebars");
 var express = require("express");
-var moment = require("./public/lib/moment.js");
+var moment = require("./public/lib/js/moment.js");
 var morgan = require("morgan");
 var passport = require("passport");
 var bodyParser = require("body-parser");
