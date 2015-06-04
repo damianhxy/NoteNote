@@ -31,7 +31,9 @@ exports.localReg = function(req, user, pass) {
                         "realname": req.body.realname,
                         "school": req.body.school,
                         "icon": randomcolor({ luminosity: "light" }),
-                        "karma": 0
+                        "karma": 0,
+                        "followees": [], // Following them
+                        "followers": [] // Being followed
                     }, function(err, obj) {
                         if (err) deferred.reject("INSERT ERROR");
                         else deferred.resolve(obj);

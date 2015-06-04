@@ -138,7 +138,20 @@ app.get("/", function(req, res, next) {
             next(new Error("Failed to load homepage"));
         });
     } else
-        res.render("intro"); // Placeholder
+        res.render("landing", {layout: false});
+});
+
+app.get("/register", function(req, res, next) {
+    if (req.user) {
+        func.getFollowing(req.user.username)
+        .then(function(mask) {
+            res.redirect("/");
+        })
+        .fail(function(err) {
+            next(new Error("Failed to load homepage"));
+        });
+    } else
+        res.render("landing", {layout: false});
 });
 
 app.post("/signin", passport.authenticate("local-signin", {
@@ -189,9 +202,7 @@ app.post("/addpost", function(req, res, next) {
                 "karma": 0,
                 "id": count + 1,
                 "text": req.body.text,
-                "icon": req.user.icon,
-                "followees": [], // Following them
-                "followers": [] // Being followed
+                "icon": req.user.icon
             });
         })
         .fail(function(err) {
@@ -258,12 +269,12 @@ app.post("/follow", function(req, res, next) {
     });
 });
 
-app.get("/profiles", function(req, res, next) {
+app.get("/profiles/:userID", function(req, res, next) {
     var scope = {};
-    func.getUserPosts(req.body.userID, 0)
+    func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
         scope.posts = posts;
-        return getFollowed(req.body.userID);
+        return getFollowed(req.params.userID);
     })
     .then(function(followers) {
         res.render("profile", {
