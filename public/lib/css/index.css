@@ -1,0 +1,215 @@
+*{
+	margin: 0;
+	font-family: 'Open Sans', sans-serif;
+}
+
+a{
+	color: inherit;
+	text-decoration: none;
+}
+
+body{
+	background: #3498DB;
+}
+
+.searchbar{
+	color: #2980B9;
+}
+
+.searchbar input{
+	border: 0;
+	font-size: 1em;
+	width: calc(100% - 2em);
+	padding: 0 0.5em;
+	outline: 0;
+	outline: none;
+}
+
+.card{
+	position: relative;
+	background: #fff;
+	max-width: 800px;
+	padding: 0.5em;
+	margin: 2em 1em;
+	border-radius: 3px;
+	box-shadow: 0 3px 0 #a7d3ef;
+}
+
+.card .cardpic{
+	position: absolute;
+	top: -1em;
+	left: 0.2em;
+	height: 4em;
+	width: 4em;
+	border-radius: 2em;
+	border: 3px #fff solid;
+	background: #a7d3ef;
+}
+
+.card .cardname{
+	margin-left: 3.3em;
+	margin-top: 0.1em;
+	font-size: 1.2em;
+	font-family: 'Montserrat', 'Open Sans', sans-serif;
+}
+
+.card .cardcaption{
+	margin-top: 1.3em;
+}
+
+.card .cardpreview{
+	display:block;
+	margin: 1em 0;
+	left: -0.5em;
+	width: 100%;
+	padding: 1em;
+	color: #fff;
+	border-radius: 3px;
+	background: #444;
+	box-shadow: 0 3px 0 #222;	
+	transition: 100ms;
+}
+
+.card .cardpreview.pdf{
+	background: #E74C3C;
+	box-shadow: 0 3px 0 #C0392B;
+}
+
+.card .cardpreview:active{
+	transform: translateY(3px);
+	box-shadow: 0 0 0;
+}
+
+.card .cardpreview i{
+	font-size: 1.1em;
+	margin-right: 0.5em;
+}
+
+.card .cardtags{
+	line-height: 3em;
+}
+
+.card .cardtags span{
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #000;
+}
+
+.card .cardtags a{
+	padding: 5px;
+	background: #e1f0fa;
+	color: #2980B9;
+	margin: 0 0.1em;
+	border-radius: 3px;
+	text-decoration: none;
+}
+
+.card .cardcontrols{
+	background: #2980B9;
+	border-radius: 3px;
+	margin-top: 0.2em;
+}
+
+.card .cardcontrols a, .card .cardcontrols span{
+	display: inline-block;
+	width: 25%;
+	text-align: center;
+	color: #a7d3ef;
+	margin-left: -4px;
+	padding: 0.3em;
+	text-decoration: none;
+	font-weight: 700;
+}
+
+.card .cardcontrols a:hover{
+	color: #fff;
+}
+
+.card .cardcontrols span{
+	color: #fff;
+}
+
+.card.load{
+	color: #2980B9;
+	text-align: center
+}
+
+.card.add{
+	padding: 1em;
+}
+
+.addtitle{
+	font-size: 1.5em;
+	font-family: 'Montserrat', inherit;
+	color: #2980B9;
+}
+
+.addtitle i{
+	font-size: 0.8em
+}
+
+.addtext{
+	width: 100%;
+	max-	width: 100%;
+	font-size: 1em;
+	padding: 0.5em;
+	border: 0px;
+	background: #e1f0fa;
+	color: #2980B9;
+	margin: 0.5em 0;
+	border-radius: 3px
+}
+
+.addfile{
+	display: none;
+}
+
+.addbutton{
+	display: block;
+	cursor: pointer;
+	color: #fff;
+	background: #3498DB;
+	box-shadow: 0 3px 0 #2980B9;
+	font-size: 1em;
+	width: 100%;
+	text-align: center;
+	border: 0px;
+	padding: 0.5em;
+	margin: 0.5em 0;
+	border-radius: 3px;
+}
+
+.addbutton#fakeaf{
+	display: inline-block;
+	width: 30%;
+}
+
+.addfilename{
+	display: inline-block;
+	width: 70%;
+	padding: 1em;
+}
+
+#branding{
+	position: fixed;
+	bottom: 2em;
+	left: 2em;
+	width: 4em;
+	height: 4em;
+	line-height: 4em;
+	text-align: center;
+	background: #fff;
+	color: #2980B9;
+	box-shadow: 0 3px 0 #a7d3ef, 0 3px 10px rgba(0,0,0,0.5);
+	border-radius: 2em;
+	cursor: pointer;
+}
+
+@media (min-width: 781px){
+	.cardbox{
+		margin-left: 17em;
+	}
+	#branding{
+		display: none;
+	}
+}

@@ -1,0 +1,80 @@
+header {
+    position: fixed;
+}
+
+#sidebar-left {
+    position: fixed;
+    top: -3px;
+    left: 1em;
+    width: 15em;
+    background: #fff;
+    z-index: 3;
+    color: #2980B9;
+    border-radius: 3px;
+	box-shadow: 0 3px 0 #a7d3ef;
+}
+
+#sidebar-left a {
+    text-decoration: none;
+    display: block;
+    padding: 1em;
+    color: inherit;
+    transition: 200ms;
+}
+
+#sidebar-left a i.fa{
+	margin-right: 0.5em;
+	width: 1em;
+	text-align: center;
+}
+
+#sidebar-left a:hover{
+    background: #e1f0fa;
+}
+
+#container {
+    padding-left: 220px;
+}
+
+#chassisblack{
+    display: none;
+}
+
+#sidebar-left .logo{
+	text-align: center;
+	padding: 1em 0;
+}
+
+#sidebar-left .logo h1{
+	font-weight: 400;
+	font-family: 'Montserrat', sans-serif;
+}
+
+@media (max-width: 780px) {
+    #sidebar-left {
+        position: fixed;
+        top: calc(-3px - 30em);
+        width: 80%;
+        left: 10%;
+        transition: 300ms;
+        max-width: 100%;
+    }
+    #sidebar-left .logo{
+		display: none;
+    }
+    #container {
+        padding-left: 0;
+    }
+    #chassisblack{
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%; 
+        z-index: -1;
+        transition: 0.3s;
+        background: #000;
+        opacity:0;
+    }
+}
