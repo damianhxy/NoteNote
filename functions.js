@@ -1,5 +1,5 @@
-var nedb = require("nedb");
-var bcrypt = require("bcryptjs");
+var Datastore = require("nedb");
+var bcrypt = require("bcrypt");
 var randomcolor = require("randomcolor");
 var userDB = new Datastore({filename: "./databases/users"});
 var onlineDB = new Datastore({filename: "./databases/online"});
