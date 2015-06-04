@@ -358,6 +358,11 @@ app.get("/users", function(req, res, next) {
 app.get("/leaderboard", function(req, res, next) {
     func.leaderboard()
     .then(function(users) {
+        users[0]["rank"] = 1;
+        for (var a = 1; a < users.length; ++a)
+            if (users[a].karma === users[a - 1].karma)
+                users[a]["rank"] = users[a - 1]["rank"];
+            else users[a]["rank"] = users[a - 1]["rank"] + 1;
         res.render("leaderboard", {
             user: req.user,
             users: users
