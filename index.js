@@ -136,7 +136,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
     console.log(err);
     console.trace();
-    res.status(500).send(500).send("500 Internal Server Error: " + err);
+    res.status(500).send("500 Internal Server Error: " + err);
 });
 
 var PORT = 8080;

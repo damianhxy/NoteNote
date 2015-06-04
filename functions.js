@@ -3,7 +3,12 @@ var bcrypt = require("bcrypt");
 var randomcolor = require("randomcolor");
 var userDB = new Datastore({filename: "./databases/users"});
 var onlineDB = new Datastore({filename: "./databases/online"});
+var postDB = new Datastore({filename: "./databases/posts"});
+var friendDB = new Datastore({filename: "./databases/friendships"});
 var Q = require("q");
+var multer = require("multer");
+
+// Auth
 
 exports.localReg = function(req, user, pass) {
     var deferred = Q.defer();
@@ -57,6 +62,8 @@ exports.localAuth = function(user, pass) {
     return deferred.promise;
 };
 
+// Online Users
+
 exports.addUser = function(user) {
     var deferred = Q.defer();
     onlineDB.loadDatabase(function(err) {
@@ -109,4 +116,49 @@ exports.clearUsers = function() {
         });
     });
     return deferred.promise;
+};
+
+// Link to File, Tag, User, Date, Delete?, Likes, Comment, ID, Hidden, Visibility
+exports.checkViewable = function(post, user) {
+
+};
+
+exports.uploadFile = function() {
+
+};
+
+exports.addPost = function() {
+
+};
+
+exports.editPost = function() {
+
+};
+
+exports.hidePost = function() {
+
+};
+
+exports.toggleVote = function(post, user) {
+
+};
+
+exports.addComment = function() {
+
+};
+
+exports.removeComment = function() {
+
+};
+
+exports.toggleFriend = function() {
+
+};
+
+exports.renderTimeline = function(user) {
+
+};
+
+exports.renderProfile = function(profile, user) {
+
 };
