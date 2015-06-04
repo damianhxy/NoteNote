@@ -2,6 +2,13 @@ var exphbs = require("express-handlebars");
 var express = require("express");
 var moment = require("./public/lib/moment.js");
 var morgan = require("morgan");
+var nedb = require("nedb");
+var passport = require("passport");
+var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+var methodOverride = require("method-override");
+var session = require("express-session");
+var LocalStrategy = require("passport-local");
 
 var app = express();
 var hbs = exphbs.create({
@@ -21,6 +28,8 @@ app.use(express.static(__dirname + "/public"));
 app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
 
 // Routes
+
+
 
 app.listen(8080);
 console.info("Listening on port 8080 in " + app.get("env") + " mode.");
