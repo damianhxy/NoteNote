@@ -209,7 +209,7 @@ app.post("/addpost", function(req, res, next) {
                 "path": latest.path,
                 "filename": latest.name,
                 "extension": latest.extension,
-                "tags": (req.body.tags).split(","),
+                "tags": (req.body.tags).split(",").map(function(e) {e = e.toLowerCase()}),
                 "user": res.user.username,
                 "date": moment().format(),
                 "hidden": false,
@@ -352,7 +352,7 @@ app.get("/users", function(req, res, next) {
 
 app.get("/add", function(req, res, next) {
 	res.render("add", {
-		user: req.user,
+		user: req.user
 	});
 });
 
