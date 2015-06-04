@@ -29,7 +29,7 @@ body{
 	position: relative;
 	background: #fff;
 	max-width: 800px;
-	padding: 0.5em;
+	padding: 1em;
 	margin: 2em 1em;
 	border-radius: 3px;
 	box-shadow: 0 3px 0 #a7d3ef;
@@ -47,14 +47,15 @@ body{
 }
 
 .card .cardname{
-	margin-left: 3.3em;
-	margin-top: 0.1em;
-	font-size: 1.2em;
+	margin-left: 3em;
+	margin-top: -0.4em;
+	font-size: 1.3em;
 	font-family: 'Montserrat', 'Open Sans', sans-serif;
+	margin-bottom: 1.1em;
 }
 
-.card .cardcaption{
-	margin-top: 1.3em;
+.card .carddate{
+	font-size: 0.8em;
 }
 
 .card .cardpreview{
@@ -141,7 +142,6 @@ body{
 .addtitle{
 	font-size: 1.5em;
 	font-family: 'Montserrat', inherit;
-	color: #2980B9;
 }
 
 .addtitle i{
@@ -203,6 +203,27 @@ body{
 	box-shadow: 0 3px 0 #a7d3ef, 0 3px 10px rgba(0,0,0,0.5);
 	border-radius: 2em;
 	cursor: pointer;
+}
+
+.card.profile{
+	margin-bottom: 3em;
+}
+
+.card.profile .cardpic{
+	left: 1em;
+	height: 8em;
+	width: 8em;
+	border-radius: 4em;
+}
+
+.card.profile .cardname{
+	margin: 0 0 0 6em;
+	font-size: 1.5em;
+	font-family: 'Montserrat', 'Open Sans', sans-serif;
+}
+
+.card.profile .cardinfo{
+	margin-left: 9em;
 }
 
 @media (min-width: 781px){
