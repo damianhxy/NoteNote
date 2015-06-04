@@ -32,7 +32,7 @@ exports.localReg = function(req, user, pass) {
                         "school": req.body.school,
                         "icon": randomcolor({ luminosity: "light" }),
                         "karma": 0,
-                        "followees": [], // Following them
+                        "followees": [user], // Following them
                         "followers": [], // Being followed
                         "joined": Date.now()
                     }, function(err, obj) {
@@ -361,7 +361,7 @@ exports.filterPosts = function(user, offset, mask) { // Return all the posts obj
     postDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
         else postDB.find({
-            $where: function() { return ~ mask.indexOf(this.user) }
+            $where: function() { return !! ~ mask.indexOf(this.user) }
         }).skip(offset).limit(20).exec(function(err, posts) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(posts);

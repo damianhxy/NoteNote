@@ -62,7 +62,8 @@ app.set("view engine", "handlebars");
 // Strategies
 passport.use("local-signin", new LocalStrategy({
         passReqToCallback: true
-    }, function(req, username, password, done) {
+    },
+    function(req, username, password, done) {
         var scope = {};
         func.localAuth(username, password)
         .then(function(user) {
@@ -178,7 +179,7 @@ app.post("/signin", passport.authenticate("local-signin", {
 
 app.post("/signup", passport.authenticate("local-signup", {
     successRedirect: "/",
-    failureRedirect: "/"
+    failureRedirect: "/register"
 }));
 
 app.use(function(req, res, next) {
@@ -208,9 +209,10 @@ app.post("/addpost", function(req, res, next) {
             return func.addPost({
                 "path": latest.path,
                 "filename": latest.name,
+                "original": latest.originalname,
                 "extension": latest.extension,
                 "tags": (req.body.tags).split(",").map(function(e) {e = e.toLowerCase()}),
-                "user": res.user.username,
+                "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
                 "comments": {},
@@ -223,6 +225,9 @@ app.post("/addpost", function(req, res, next) {
                 "text": req.body.text,
                 "icon": req.user.icon
             });
+        })
+        .then(function() {
+            res.redirect("/");
         })
         .fail(function(err) {
             console.log("Failed to make post: " + err);
@@ -305,7 +310,7 @@ app.get("/profile/:userID", function(req, res, next) {
             theuser: theuser,
             posts: scope.posts,
             isFollower: ~ scope.followers.indexOf(req.user.username),
-            followerCount: scope.followers.length
+            followerCount: scope.followers.length - 1
         });
     })
     .fail(function(err) {
@@ -400,7 +405,6 @@ app.use(function(req, res, next) {
 
 app.use(function(err, req, res, next) {
     console.log(err);
-    console.trace();
     res.status(500).send("500 Internal Server Error: " + err);
 });
 
