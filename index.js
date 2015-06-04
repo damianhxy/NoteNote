@@ -350,6 +350,12 @@ app.get("/users", function(req, res, next) {
     });
 });
 
+app.get("/add", function(req, res, next) {
+	res.render("add", {
+		user: req.user,
+	});
+});
+
 app.get("/search", function(req, res, next) {
     func.searchTags(req.body.tag, 0)
     .then(function(posts) {

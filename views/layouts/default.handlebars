@@ -8,7 +8,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<title>notenote</title>
 	<link rel="author" type="text/plain" href="/humans.txt">
-	<link rel="icon" href="/media/favicon.png" type="image/png">
+	<link rel="icon" href="/media/favicon.ico" type="image/ico">
 	<link rel="apple-touch-icon" href="/media/favicon.png" type="image/png">
 	<link href="/lib/css/index.css" rel="stylesheet">
 	<link href="/lib/css/sidebar.css" rel="stylesheet">
@@ -24,12 +24,12 @@
 			<h1>notenote</h1>
 			<p>- share knowledge -</p>
 		</div>
-		<a href="#"><i class="fa fa-home"></i> Home</a>
-		<a href="#"><i class="fa fa-star"></i> Highest Rated</a>
-		<a href="#"><i class="fa fa-trophy"></i> Leaderboards	</a>
-		<a href="#"><i class="fa fa-user"></i> My Profile</a>
-		<a href="#"><i class="fa fa-plus"></i> Upload Notes</a>
-		<a href="#"><i class="fa fa-sign-out"></i> Sign Out</a>
+		<a href="/"><i class="fa fa-home"></i> Home</a>
+		<a href="/top"><i class="fa fa-star"></i> Highest Rated</a>
+		<a href="/leaderboard"><i class="fa fa-trophy"></i> Leaderboard</a>
+		<a href="/profile/{{user.username}}"><i class="fa fa-user"></i> My Profile</a>
+		<a href="/add"><i class="fa fa-plus"></i> Upload Notes</a>
+		<a href="/logout"><i class="fa fa-sign-out"></i> Sign Out</a>
 	</nav>
 	<section class="cardbox">
 		{{{body}}}
