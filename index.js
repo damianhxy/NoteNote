@@ -15,7 +15,20 @@ var latest;
 
 var app = express();
 var hbs = exphbs.create({
-    defaultLayout: "default"
+    defaultLayout: "default",
+    helpers: {
+        fileType: function(extension) {
+            if (/docx?/.test(extension))
+                return "fa-file-word-o";
+            if (/pptx?/.test(extension))
+                return "fa-file-powerpoint-o";
+            if (/xlsx?/.test(extension))
+                return "fa-file-excel-o";
+            if (extension === "pdf")
+                return "fa-file-pdf-o";
+            return "fa-file-o";
+        }
+    }
 });
 app.use(multer({
     dest: "./public/uploads/",
@@ -194,6 +207,8 @@ app.post("/addpost", function(req, res, next) {
         .then(function(count) {
             return func.addPost({
                 "path": latest.path,
+                "filename": latest.name,
+                "extension": latest.extension,
                 "tags": (req.body.tags).split(","),
                 "user": res.user.username,
                 "date": moment().format(),
