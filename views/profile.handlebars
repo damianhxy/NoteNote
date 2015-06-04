@@ -1,30 +1,35 @@
 <div class="card searchbar"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..."><a href="#"><i class="fa fa-arrow-right"></i></a></div>
 <div class="card profile">
 	<div class="cardpic"></div>
-	<p class="cardname">username</p>
-	<p class="cardinfo">Real Name</p>
-	<p class="cardinfo">2070 karma | {{followerCount}} followers</p>
+	<p class="cardname">{{theuser.username}}</p>
+	<p class="cardinfo">{{theuser.realname}}</p>
+	<p class="cardinfo">{{theuser.karma}} karma | {{followerCount}} followers</p>
 </div>
 <div class="cardcont">
+	{{#if posts}}
+	{{#each posts}}
 	<div class="card">
-		<p class="carddate">21st December 2319</p>
-		<p class="cardcaption">These are my notes for purple</p>
-		<a class="cardpreview pdf" href="#">
-			<i class="fa fa-file-pdf-o"></i>
-			<span> Amazing English Notes.pdf</span>
+		<p class="carddate">{{this.date}}</p>
+		<p class="cardcaption">{{this.text}}</p>
+		<a class="cardpreview {{this.extension}}" href="{{this.path}}">
+			<i class="fa {{fileType this.extension}}"></i>
+			<span> {{this.filename}}</span>
 		</a>
 		<div class="cardtags">
 			<span>Tags: </span>
-			<a>Blue</a>
-			<a>Purple</a>
-			<a>What</a>
-			<a>Even</a>
+			{{#each this.tags}}
+			<a href="/search/{{this}}">{{this}}</a>
+			{{/each}}
 		</div>
 		<div class="cardcontrols">
-			<span href="">1023</span>
-			<a href=""><i class="fa fa-arrow-up"></i></a>
-			<a href=""><i class="fa fa-arrow-down"></i></a>
-			<a href=""><i class="fa fa-comment"></i></a>
+			<span href="">{{this.karma}}</span>
+			<a href="#"><i class="fa fa-arrow-up"></i></a>
+			<a href="#"><i class="fa fa-arrow-down"></i></a>
+			<a href="#"><i class="fa fa-comment"></i></a>
 		</div>
 	</div>
+	{{/each}}
+	{{else}}
+	
+	{{/if}}
 </div>
