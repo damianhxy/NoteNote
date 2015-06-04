@@ -403,10 +403,10 @@ exports.searchTags = function(tag, offset) {
     postDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
         else postDB.find({
-            $where: function() { return ~this.tags.indexOf(tag) }
+            $where: function() { return !! ~ this.tags.indexOf(tag) }
         }).skip(offset).limit(20).exec(function(err, posts) {
             if (err) deferred.reject("FIND ERROR");
-            else deferred.reject(args);
+            else deferred.resolve(posts);
         });
     });
     return deferred.promise;

@@ -374,10 +374,13 @@ app.get("/add", function(req, res, next) {
 	});
 });
 
-app.post("/search", function(req, res, next) {
-    func.searchTags(req.body.tag, req.body.offset)
+app.get("/search", function(req, res, next) {
+    func.searchTags(req.query.query, 0)
     .then(function(posts) {
-        res.send(posts);
+        res.render("homepage", {
+			user: req.user,
+			posts: posts
+		});
     })
     .fail(function(err) {
         console.log("Failed to load search page");
