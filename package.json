@@ -1,0 +1,22 @@
+{
+  "name": "hackathon",
+  "version": "1.0.0",
+  "description": "SST Hackathon 2015",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://damianhxy@bitbucket.org/damianhxy/hackathon.git"
+  },
+  "author": "Damian Ho, Gui Ming Jiang",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/damianhxy/hackathon#readme",
+  "dependencies": {
+    "console-stamp": "^0.1.6",
+    "express": "^4.12.4",
+    "express-handlebars": "^2.0.1",
+    "morgan": "^1.5.3"
+  }
+}

@@ -1,0 +1,26 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+	Damian Ho
+	Email: damian_ho_xu_yang@yahoo.com
+	Twitter: @damianhxy
+	Location: Singapore, Singapore
+
+	Gui Ming Jiang
+	Email: mjgui2000@hotmail.com
+	Location: Singapore, Singapore
+
+# THANKS
+
+	Koh Kim Tian
+	Email: kohkt@hci.edu.sg
+	Location: Singapore, Singapore
+
+# TECHNOLOGY COLOPHON
+
+Last update: 4/6/2015
+Standards: HTML5, CSS3, ES5
+Components: Node.js, Express.js
+Software: Sublime Text 3
