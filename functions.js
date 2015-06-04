@@ -56,7 +56,7 @@ exports.localAuth = function(user, pass) {
             else bcrypt.hash(pass, result.salt, function(err, hash) {
                 if (err) deferred.reject("HASH ERROR");
                 else if (hash !== result.password) deferred.reject("WRONG PASSWORD");
-                else deferred.resolve(user);
+                else deferred.resolve(result);
             });
         });
     });
@@ -134,12 +134,12 @@ exports.updateKarma = function(user, change) {
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("DB LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             if (!result) deferred.reject("NOT FOUND");
             else {
                 result.karma += change;
-                userDB.update({user: user}, {$set: result}, function(err) {
+                userDB.update({username: user}, {$set: result}, function(err) {
                     if (err) deferred.reject("UPDATE ERROR");
                     else deferred.resolve("UPDATE SUCCESS");
                 });
@@ -278,7 +278,7 @@ exports.userExists = function(user) {
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else if (!result) deferred.reject("NOT FOUND");
             else deferred.resolve("FOUND");
@@ -291,7 +291,7 @@ exports.toggleFollow = function(user, target) { // User following target
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else {
                 var pos = result.followees.indexOf(target);
@@ -299,7 +299,7 @@ exports.toggleFollow = function(user, target) { // User following target
                     result.followees.splice(pos, 1);
                 else
                     result.followees.push(target);
-                userDB.update({user: user}, {$set: {followees: result.followees}}, function(err) {
+                userDB.update({username: user}, {$set: {followees: result.followees}}, function(err) {
                     if (err) deferred.reject("UPDATE ERROR");
                     else deferred.resolve("UPDATE SUCCESS");
                 });
@@ -313,7 +313,7 @@ exports.toggleFollowed = function(user, target) { // User followed by target
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else {
                 var pos = result.followers.indexOf(target);
@@ -321,7 +321,7 @@ exports.toggleFollowed = function(user, target) { // User followed by target
                     result.followers.splice(pos, 1);
                 else
                     result.followers.push(target);
-                userDB.update({user: user}, {$set: {followers: result.followers}}, function(err) {
+                userDB.update({username: user}, {$set: {followers: result.followers}}, function(err) {
                     if (err) deferred.reject("UPDATE ERROR");
                     else deferred.resolve("UPDATE SUCCESS");
                 });
@@ -335,7 +335,7 @@ exports.getFollowing = function(user) {
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(result.followees);
         });
@@ -347,7 +347,7 @@ exports.getFollowed = function(user) {
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.findOne({user: user}, function(err, result) {
+        else userDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(result.followers);
         });

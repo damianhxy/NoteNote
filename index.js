@@ -130,11 +130,12 @@ app.get("/", function(req, res, next) {
         })
         .then(function(posts) {
             res.render("homepage", {
-                user: user,
+                user: req.user,
                 posts: posts
             })
         })
         .fail(function(err) {
+            console.log(err);
             next(new Error("Failed to load homepage"));
         });
     } else
@@ -282,7 +283,7 @@ app.get("/profiles/:userID", function(req, res, next) {
     })
     .then(function(followers) {
         res.render("profile", {
-            user: user,
+            user: req.user,
             posts: scope.posts,
             isFollower: ~ followers.indexOf(req.user.username),
             followerCount: followers.length
@@ -321,7 +322,7 @@ app.get("/users", function(req, res, next) {
     func.getUsers()
     .then(function(users) {
         res.render("userlist", {
-            user: user,
+            user: req.user,
             users: users
         });
     })
@@ -334,7 +335,7 @@ app.get("/search", function(req, res, next) {
     func.searchTags(req.body.tag, 0)
     .then(function(posts) {
         res.render("search", {
-            user: user,
+            user: req.user,
             posts: posts
         });
     })
