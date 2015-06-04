@@ -361,7 +361,7 @@ exports.filterPosts = function(user, offset, mask) { // Return all the posts obj
     postDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
         else postDB.find({
-            $where: function() { return !! ~ mask.indexOf(this.user) }
+            $where: function() { return !! ~ mask.indexOf(this.user) }, hidden: false
         }).skip(offset).limit(20).sort({date: -1}).exec(function(err, posts) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(posts);
@@ -403,7 +403,7 @@ exports.searchTags = function(tag, offset) {
     postDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
         else postDB.find({
-            $where: function() { return !! ~ this.tags.indexOf(tag) }
+            $where: function() { return !! ~ this.tags.indexOf(tag) }, hidden: false
         }).skip(offset).limit(20).exec(function(err, posts) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(posts);
@@ -440,7 +440,7 @@ exports.getTopPosts = function() { // Limit to 20
     var deferred = Q.defer();
     postDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else postDB.find({}).sort({karma: -1, date: -1, user: 1}).limit(20).exec(function(err, result) {
+        else postDB.find({hidden: false}).sort({karma: -1, date: -1, user: 1}).limit(20).exec(function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(result);
         });
