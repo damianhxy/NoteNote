@@ -112,7 +112,7 @@ app.use(express.static("./public"));
 app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
 
 app.use(function(req, res, next) {
-    ["error", "notice", "success"].each(function(e) {
+    ["error", "notice", "success"].forEach(function(e) {
         if (req.session[e]) {
             res.locals[e] = req.session[e];
             delete req.session[e];
@@ -138,7 +138,9 @@ app.get("/", function(req, res, next) {
             next(new Error("Failed to load homepage"));
         });
     } else
-        res.render("landing", {layout: false});
+        res.render("landing", {
+            layout: false
+        });
 });
 
 app.get("/register", function(req, res, next) {
@@ -151,7 +153,9 @@ app.get("/register", function(req, res, next) {
             next(new Error("Failed to load homepage"));
         });
     } else
-        res.render("landing", {layout: false});
+        res.render("register", {
+            layout: false
+        });
 });
 
 app.post("/signin", passport.authenticate("local-signin", {
