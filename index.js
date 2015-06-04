@@ -189,9 +189,7 @@ app.post("/addpost", function(req, res, next) {
                 "karma": 0,
                 "id": count + 1,
                 "text": req.body.text,
-                "icon": req.user.icon,
-                "followees": [], // Following them
-                "followers": [] // Being followed
+                "icon": req.user.icon
             });
         })
         .fail(function(err) {
@@ -258,12 +256,12 @@ app.post("/follow", function(req, res, next) {
     });
 });
 
-app.get("/profiles", function(req, res, next) {
+app.get("/profiles/:userID", function(req, res, next) {
     var scope = {};
-    func.getUserPosts(req.body.userID, 0)
+    func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
         scope.posts = posts;
-        return getFollowed(req.body.userID);
+        return getFollowed(req.params.userID);
     })
     .then(function(followers) {
         res.render("profile", {
