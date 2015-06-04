@@ -135,8 +135,7 @@ app.get("/", function(req, res, next) {
             })
         })
         .fail(function(err) {
-            console.log(err);
-            next(new Error("Failed to load homepage"));
+            next(err);
         });
     } else
         res.render("landing", {
@@ -151,7 +150,7 @@ app.get("/register", function(req, res, next) {
             res.redirect("/");
         })
         .fail(function(err) {
-            next(new Error("Failed to load homepage"));
+            next(err);
         });
     } else
         res.render("register", {
@@ -290,7 +289,7 @@ app.get("/profiles/:userID", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load profile page"));
+        next(err);
     });
 });
 
@@ -327,7 +326,7 @@ app.get("/users", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load user list"));
+        next(err);
     });
 });
 
@@ -340,7 +339,7 @@ app.get("/search", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load search page"));
+        next(err);
     });
 });
 
