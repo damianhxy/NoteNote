@@ -33,7 +33,8 @@ exports.localReg = function(req, user, pass) {
                         "icon": randomcolor({ luminosity: "light" }),
                         "karma": 0,
                         "followees": [], // Following them
-                        "followers": [] // Being followed
+                        "followers": [], // Being followed
+                        "joined": Date.now()
                     }, function(err, obj) {
                         if (err) deferred.reject("INSERT ERROR");
                         else deferred.resolve(obj);
@@ -422,3 +423,15 @@ exports.getUserByID = function(user) {
 	});
 	return deferred.promise;
 };
+
+exports.leaderBoards = function() {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.find({}).sort({karma: -1, joined: -1}).exec(function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(result);
+        });
+    });
+    return deferred.promise;
+}
