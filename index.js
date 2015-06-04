@@ -15,7 +15,20 @@ var latest;
 
 var app = express();
 var hbs = exphbs.create({
-    defaultLayout: "default"
+    defaultLayout: "default",
+    helpers: {
+        fileType: function(extension) {
+            if (/docx?/.test(extension))
+                return "fa-file-word-o";
+            if (/pptx?/.test(extension))
+                return "fa-file-powerpoint-o";
+            if (/xlsx?/.test(extension))
+                return "fa-file-excel-o";
+            if (extension === "pdf")
+                return "fa-file-pdf-o";
+            return "fa-file-o";
+        }
+    }
 });
 app.use(multer({
     dest: "./public/uploads/",
@@ -135,7 +148,7 @@ app.get("/", function(req, res, next) {
             })
         })
         .fail(function(err) {
-            next(new Error("Failed to load homepage"));
+            next(err);
         });
     } else
         res.render("landing", {
@@ -150,7 +163,7 @@ app.get("/register", function(req, res, next) {
             res.redirect("/");
         })
         .fail(function(err) {
-            next(new Error("Failed to load homepage"));
+            next(err);
         });
     } else
         res.render("register", {
@@ -194,6 +207,8 @@ app.post("/addpost", function(req, res, next) {
         .then(function(count) {
             return func.addPost({
                 "path": latest.path,
+                "filename": latest.name,
+                "extension": latest.extension,
                 "tags": (req.body.tags).split(","),
                 "user": res.user.username,
                 "date": moment().format(),
@@ -289,7 +304,7 @@ app.get("/profile/:userID", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load profile page"));
+        next(err);
     });
 });
 
@@ -326,7 +341,7 @@ app.get("/users", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load user list"));
+        next(err);
     });
 });
 
@@ -339,7 +354,7 @@ app.get("/search", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(new Error("Failed to load search page"));
+        next(err);
     });
 });
 
