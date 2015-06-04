@@ -362,7 +362,7 @@ exports.filterPosts = function(user, offset, mask) { // Return all the posts obj
         if (err) deferred.reject("LOAD ERROR");
         else postDB.find({
             $where: function() { return !! ~ mask.indexOf(this.user) }
-        }).skip(offset).limit(20).exec(function(err, posts) {
+        }).skip(offset).limit(20).sort({date: -1}).exec(function(err, posts) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(posts);
         });
@@ -424,11 +424,11 @@ exports.getUserByID = function(user) {
 	return deferred.promise;
 };
 
-exports.leaderBoards = function() {
+exports.leaderboard = function() {
     var deferred = Q.defer();
     userDB.loadDatabase(function(err) {
         if (err) deferred.reject("LOAD ERROR");
-        else userDB.find({}).sort({karma: -1, joined: -1}).exec(function(err, result) {
+        else userDB.find({}).sort({karma: -1, joined: -1}).limit(20).exec(function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             else deferred.resolve(result);
         });

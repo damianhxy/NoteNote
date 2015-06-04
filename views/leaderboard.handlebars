@@ -1,0 +1,20 @@
+<div class="card table">
+	<table>
+	<thead>
+		<tr>
+			<th>Ranking</th>
+			<th>Username</th>
+			<th>Karma</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each users}}
+		<tr>
+			<td>{{@index}}</td>
+			<td>{{this.username}}</td>
+			<td>{{this.karma}}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+	</table>
+</div>

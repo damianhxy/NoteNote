@@ -207,11 +207,11 @@ app.post("/addpost", function(req, res, next) {
         func.getPostCount()
         .then(function(count) {
             return func.addPost({
-                "path": latest.path,
+                "path": latest.path.slice(6),
                 "filename": latest.name,
                 "original": latest.originalname,
                 "extension": latest.extension,
-                "tags": (req.body.tags).split(",").map(function(e) {e = e.toLowerCase()}),
+                "tags": (req.body.tags || "").split(","),
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
@@ -355,23 +355,23 @@ app.get("/users", function(req, res, next) {
     });
 });
 
-app.get("/add", function(req, res, next) {
-	res.render("add", {
-		user: req.user
-	});
-});
-
-app.get("/search", function(req, res, next) {
-    func.searchTags(req.body.tag, 0)
-    .then(function(posts) {
-        res.render("search", {
+app.get("/leaderboard", function(req, res, next) {
+    func.leaderboard()
+    .then(function(users) {
+        res.render("leaderboard", {
             user: req.user,
-            posts: posts
+            users: users
         });
     })
     .fail(function(err) {
         next(err);
     });
+});
+
+app.get("/add", function(req, res, next) {
+	res.render("add", {
+		user: req.user
+	});
 });
 
 app.post("/search", function(req, res, next) {

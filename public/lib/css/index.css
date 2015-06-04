@@ -226,6 +226,26 @@ body{
 	margin-left: 9em;
 }
 
+table {
+	width: 100%;
+    border-radius: 3px;
+    border-collapse: collapse;
+    text-align: center
+}
+
+th, td {
+    padding: 0.7em;
+}
+
+th {
+    color: #2980B9;
+    background: #a7d3ef;
+}
+
+tr{
+	color: #3498DB;
+}
+
 @media (min-width: 781px){
 	.cardbox{
 		margin-left: 17em;
