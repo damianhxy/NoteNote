@@ -29,7 +29,7 @@ var hbs = exphbs.create({
             return "fa-file-o";
         },
         isInside: function(element, array) {
-            return ~ array.indexOf(element);
+            return !! ~ array.indexOf(element);
         }
     }
 });
@@ -312,7 +312,7 @@ app.get("/profile/:userID", function(req, res, next) {
             user: req.user,
             theuser: theuser,
             posts: scope.posts,
-            isFollower: ~ scope.followers.indexOf(req.user.username),
+            isFollower: !! ~ scope.followers.indexOf(req.user.username),
             followerCount: scope.followers.length - 1
         });
     })

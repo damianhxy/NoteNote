@@ -41,6 +41,52 @@ window.onload = function () {
 		document.querySelector(".addfilename").textContent = document.getElementById("af").value.split("\\").pop() || "Your file name will appear here";
 	}
 	
+	document.querySelector("[data-toggle='true']").style.color = "#fff";
+	
+	function up(id, parent){
+		var x = parent.querySelector(".cardup"),
+			y = parent.querySelector(".carddown"),
+			z = parent.querySelector("span");
+		if(x.dataset.toggle == "false" && y.dataset.toggle == "true"){
+			x.style.color = "#fff";
+			y.style.color = "";
+			z.textContent = +z.textContent +2;
+			post("up",id);
+		}
+		else if(x.dataset.toggle == "false" && y.dataset.toggle == "false"){
+			x.style.color = "#fff";
+			y.style.color = "";
+			z.textContent = +z.textContent +1;
+			post("up",id);
+		}
+		else{
+			x.style.color = "";
+			post("un",id);
+		}
+	}
+	
+	function down(id, parent){
+		var x = parent.querySelector(".cardup"),
+			y = parent.querySelector(".carddown"),
+			z = parent.querySelector("span");
+		if(y.dataset.toggle == "false" && x.dataset.toggle == "true"){
+			y.style.color = "#fff";
+			x.style.color = "";
+			z.textContent = +z.textContent -2;
+			post("up",id);
+		}
+		else if(y.dataset.toggle == "false" && x.dataset.toggle == "false"){
+			y.style.color = "#fff";
+			x.style.color = "";
+			z.textContent = +z.textContent -1;
+			post("up",id);
+		}
+		else{
+			y.style.color = "";
+			post("un",id);
+		}
+	}
+	
 	//ajax (delete/vote/follow)
 	function post(action, subject){
 		var xmlhttp, url, up;
@@ -68,14 +114,6 @@ window.onload = function () {
 		else if(action === 'f'){
 			url = "/follow",
 			up = "userID="+subject;
-		}
-		
-		function up(id){
-			
-		}
-		
-		function down(id){
-			
 		}
 		
 		xmlhttp.onreadystatechange = function(){

@@ -19,9 +19,9 @@
 		</div>
 		<div class="cardcontrols">
 			<span href="">{{this.karma}}</span>
-			<a href="#" onclick="up({{this.id}})"><i class="fa fa-arrow-up"></i></a>
-			<a href="#"><i class="down({{this.id}})"></i></a>
-			<a href="#"><i class="fa fa-comment"></i></a>
+			<a class="cardup" href="#" onclick="up({{this.id}}, this.parentElement)" data-toggle="{{isInside user.username this.votes['1']}}"><i class="fa fa-arrow-up"></i></a>
+			<a class="carddown" href="#" onclick="down({{this.id}}, this.parentElement)" data-toggle="{{isInside user.username this.votes['-1']}}"><i class="fa fa-arrow-down"></i></a>
+			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
 	</div>
 	{{/each}}
