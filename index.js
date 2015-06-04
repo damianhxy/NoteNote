@@ -228,7 +228,7 @@ app.post("/addpost", function(req, res, next) {
             console.log("Failed to make post: " + err);
             res.send("Failed to make post");
         });
-    else if (latest.truncated)
+    else if (latest && latest.truncated)
         res.status(400).send("File size limit exceeded");
     else
         res.status(400).send("File upload failed");
