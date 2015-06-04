@@ -293,7 +293,7 @@ app.get("/profile/:userID", function(req, res, next) {
     func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
         scope.posts = posts;
-        return getFollowed(req.params.userID);
+        return func.getFollowed(req.params.userID);
     })
     .then(function(followers) {
         res.render("profile", {
