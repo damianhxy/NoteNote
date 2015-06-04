@@ -130,7 +130,7 @@ app.get("/", function(req, res, next) {
         })
         .then(function(posts) {
             res.render("homepage", {
-                user: user,
+                user: req.user,
                 posts: posts
             })
         })
@@ -273,7 +273,7 @@ app.post("/follow", function(req, res, next) {
     });
 });
 
-app.get("/profiles/:userID", function(req, res, next) {
+app.get("/profile/:userID", function(req, res, next) {
     var scope = {};
     func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
@@ -282,7 +282,7 @@ app.get("/profiles/:userID", function(req, res, next) {
     })
     .then(function(followers) {
         res.render("profile", {
-            user: user,
+            user: req.user,
             posts: scope.posts,
             isFollower: ~ followers.indexOf(req.user.username),
             followerCount: followers.length
@@ -293,7 +293,7 @@ app.get("/profiles/:userID", function(req, res, next) {
     });
 });
 
-app.post("/profiles", function(req, res, next) { // Returns (bool)follows, follower count, posts
+app.post("/profile", function(req, res, next) { // Returns (bool)follows, follower count, posts
     func.getUserPosts(req.body.userID, req.body.offset)
     .then(function(posts) {
         res.send(posts);
@@ -321,7 +321,7 @@ app.get("/users", function(req, res, next) {
     func.getUsers()
     .then(function(users) {
         res.render("userlist", {
-            user: user,
+            user: req.user,
             users: users
         });
     })
@@ -334,7 +334,7 @@ app.get("/search", function(req, res, next) {
     func.searchTags(req.body.tag, 0)
     .then(function(posts) {
         res.render("search", {
-            user: user,
+            user: req.user,
             posts: posts
         });
     })
