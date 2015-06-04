@@ -27,6 +27,9 @@ var hbs = exphbs.create({
             if (extension === "pdf")
                 return "fa-file-pdf-o";
             return "fa-file-o";
+        },
+        isInside: function(element, array) {
+            return ~ array.indexOf(element);
         }
     }
 });
