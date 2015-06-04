@@ -399,6 +399,19 @@ app.get("/logout", function(req, res, next) {
     });
 });
 
+app.get("/top", function(req, res, next) {
+    func.getTopPosts()
+    .then(function(posts) {
+        res.render("homepage", {
+            user: req.user,
+            posts: posts
+        });
+    })
+    .fail(function(err) {
+        next(err);
+    });
+});
+
 app.use(function(req, res, next) {
     res.status(404).send("404 Error: File Not Found");
 });

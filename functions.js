@@ -434,4 +434,16 @@ exports.leaderboard = function() {
         });
     });
     return deferred.promise;
+};
+
+exports.getTopPosts = function() { // Limit to 20
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.find({}).sort({karma: -1, date: -1, user: 1}).limit(20).exec(function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(result);
+        });
+    });
+    return deferred.promise;
 }
