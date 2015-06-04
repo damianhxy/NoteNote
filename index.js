@@ -9,11 +9,33 @@ var methodOverride = require("method-override");
 var session = require("express-session");
 var LocalStrategy = require("passport-local");
 var func = require("./functions.js");
+var multer = require("multer");
+var fs = require("fs");
+var latest;
 
 var app = express();
 var hbs = exphbs.create({
     defaultLayout: "default"
 });
+app.use(multer({
+    dest: "./public/uploads/",
+    limits: { fileSize: 26214400 },
+    rename: function() {
+        return "upload" + Date.now();
+    },
+    onFileUploadStart: function(file) {
+        latest = null;
+        console.log("Uploading " + file.originalname);
+    },
+    onFileUploadComplete: function(file) {
+        latest = file;
+        console.log(file.originalname + " uploaded to " + file.path);
+    },
+    onFileSizeLimit: function(file) {
+        console.log("Exceeded Size Limit: " + file.originalname);
+        fs.unlink("./" + file.path);
+    }
+}));
 morgan.token("date", function(req, res) {
     return require("console-stamp/node_modules/dateformat")(new Date(), "dd mmm HH:MM:ss");
 });
@@ -86,7 +108,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname + "/public"));
+app.use(express.static("./public"));
 app.use(morgan("[:date] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
 
 app.use(function(req, res, next) {
@@ -101,22 +123,224 @@ app.use(function(req, res, next) {
 
 // Routes
 app.get("/", function(req, res, next) {
-    res.render("index");
+    if (req.user) {
+        func.getFollowing(req.user.username)
+        .then(function(mask) {
+            return func.filterPosts(req.user.username, 0, mask);
+        })
+        .then(function(posts) {
+            res.render("homepage", {
+                user: user,
+                posts: posts
+            })
+        })
+        .fail(function(err) {
+            next(new Error("Failed to load homepage"));
+        });
+    } else
+        res.render("intro"); // Placeholder
 });
 
-app.post("/signin", function(req, res, next) {
+app.post("/signin", passport.authenticate("local-signin", {
+    successRedirect: "/",
+    failureRedirect: "/"
+}));
 
+app.post("/signup", passport.authenticate("local-signup", {
+    successRedirect: "/",
+    failureRedirect: "/"
+}));
+
+app.use(function(req, res, next) {
+    if (!req.user) {
+        req.session.error = "Please log in first";
+        res.redirect("/");
+    } else next();
 });
 
-app.post("/signup", function(req, res, next) {
-
+app.post("/", function(req, res, next) {
+    func.getFollowing(req.user.username)
+    .then(function(mask) {
+        return func.filterPosts(req.user.username, req.body.offset, mask);
+    })
+    .then(function(posts) {
+        res.send(posts);
+    })
+    .fail(function() {
+        res.status(400).send("Loading Failed");
+    });
 });
+
+app.post("/addpost", function(req, res, next) {
+    if (latest && !latest.truncated)
+        func.getPostCount()
+        .then(function(count) {
+            return func.addPost({
+                "path": latest.path,
+                "tags": (req.body.tags).split(","),
+                "user": res.user.username,
+                "date": moment().format(),
+                "hidden": false,
+                "comments": {},
+                "votes": {
+                    "-1": [],
+                    "1": []
+                },
+                "karma": 0,
+                "id": count + 1,
+                "text": req.body.text,
+                "icon": req.user.icon,
+                "followees": [], // Following them
+                "followers": [] // Being followed
+            });
+        })
+        .fail(function(err) {
+            console.log("Failed to make post: " + err);
+            res.send("Failed to make post");
+        });
+    else if (latest.truncated)
+        res.status(400).send("File size limit exceeded");
+    else
+        res.status(400).send("File upload failed");
+});
+
+app.post("/deletepost", function(req, res, next) {
+    func.getPostByID(req.body.postID)
+    .then(function(post) {
+        if (req.user.username === post.user)
+            return func.deletePost(req.body.postID);
+        else
+            res.send("Not Owner");
+    })
+    .then(function() {
+        res.send("Delete Success");
+    })
+    .fail(function(err) {
+        console.log("Failed to delete post: " + err);
+        res.status(400).send("Failed to delete post");
+    });
+});
+
+app.post("/addcomment", function(req, res, next) {
+    func.commentCount(req.body.postID)
+    .then(function(count) {
+        return func.addComment(req.body.postID, req.user.username, count + 1,
+        {
+            "user": req.user.username,
+            "date": Date.now(),
+            "text": req.body.comment,
+            "icon": req.user.icon,
+            "hidden": false
+        });
+    })
+    .fail(function(err) {
+        console.log("Failed to add comment: " + err);
+        res.status(400).send("Failed to add comment");
+    });
+});
+
+app.post("/deletecomment", function(req, res, next) {
+    func.deletecomment(req.body.postID, req.user.username, req.body.commentID)
+    .fail(function(err) {
+        console.log("Failed to delete comment: " + err);
+        res.status(400).send("Failed to delete comment");
+    });
+});
+
+app.post("/follow", function(req, res, next) {
+    func.userExists(req.user.username)
+    .then(func.userExists(req.body.userID))
+    .then(func.toggleFollow(req.user.username, req.body.userID))
+    .then(func.toggleFollowed(req.body.userID, req.user.username))
+    .fail(function(err) {
+        console.log("Could not toggle follow: " + err);
+        res.status(400).send("Failed to toggle follow");
+    });
+});
+
+app.get("/profiles", function(req, res, next) {
+    var scope = {};
+    func.getUserPosts(req.body.userID, 0)
+    .then(function(posts) {
+        scope.posts = posts;
+        return getFollowed(req.body.userID);
+    })
+    .then(function(followers) {
+        res.render("profile", {
+            user: user,
+            posts: scope.posts,
+            isFollower: ~ followers.indexOf(req.user.username),
+            followerCount: followers.length
+        });
+    })
+    .fail(function(err) {
+        next(new Error("Failed to load profile page"));
+    });
+});
+
+app.post("/profiles", function(req, res, next) { // Returns (bool)follows, follower count, posts
+    func.getUserPosts(req.body.userID, req.body.offset)
+    .then(function(posts) {
+        res.send(posts);
+    })
+    .fail(function(err) {
+        console.log("Could not load profile posts: " + err);
+        res.status(400).send("Failed to load profile posts");
+    });
+}); // Render Profile
+
+app.post("/vote", function(req, res, next) {
+    func.vote(req.body.postID, req.user.username, req.body.value)
+    .then(function(diff) {
+        return func.updateKarma(req.body.postID, diff);
+    })
+    .then(function() {
+        res.send("SUCCESS");
+    })
+    .fail(function(err) {
+        res.status(400).send("Failed to register vote");
+    });
+});
+
+app.get("/users", function(req, res, next) {
+    func.getUsers()
+    .then(function(users) {
+        res.render("userlist", {
+            user: user,
+            users: users
+        });
+    })
+    .fail(function(err) {
+        next(new Error("Failed to load user list"));
+    });
+});
+
+app.get("/search", function(req, res, next) {
+    func.searchTags(req.body.tag, 0)
+    .then(function(posts) {
+        res.render("search", {
+            user: user,
+            posts: posts
+        });
+    })
+    .fail(function(err) {
+        next(new Error("Failed to load search page"));
+    });
+});
+
+app.post("/search", function(req, res, next) {
+    func.searchTags(req.body.tag, req.body.offset)
+    .then(function(posts) {
+        res.send(posts);
+    })
+    .fail(function(err) {
+        console.log("Failed to load search page");
+        res.status(400).send("Failed to load search page");
+    });
+}); // Render tags search
 
 app.get("/logout", function(req, res, next) {
-    if (!req.user) {
-        req.session.error = "You're not even logged in";
-        res.redirect("/");
-    } else func.removeUser(req.user.username)
+    func.removeUser(req.user.username)
     .then(function() {
         console.log("Logged out " + req.user.username);
         req.logout();
@@ -130,7 +354,7 @@ app.get("/logout", function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-    res.status(404).send("404 Not Found.");
+    res.status(404).send("404 Error: File Not Found");
 });
 
 app.use(function(err, req, res, next) {

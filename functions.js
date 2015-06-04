@@ -1,15 +1,13 @@
 var Datastore = require("nedb");
 var bcrypt = require("bcrypt");
 var randomcolor = require("randomcolor");
+var fs = require("fs");
 var userDB = new Datastore({filename: "./databases/users"});
 var onlineDB = new Datastore({filename: "./databases/online"});
 var postDB = new Datastore({filename: "./databases/posts"});
-var friendDB = new Datastore({filename: "./databases/friendships"});
 var Q = require("q");
-var multer = require("multer");
 
 // Auth
-
 exports.localReg = function(req, user, pass) {
     var deferred = Q.defer();
     user = user.toLowerCase();
@@ -32,7 +30,8 @@ exports.localReg = function(req, user, pass) {
                         "email": req.body.email,
                         "realname": req.body.realname,
                         "school": req.body.school,
-                        "icon": randomcolor({ luminosity: "light" })
+                        "icon": randomcolor({ luminosity: "light" }),
+                        "karma": 0
                     }, function(err, obj) {
                         if (err) deferred.reject("INSERT ERROR");
                         else deferred.resolve(obj);
@@ -63,7 +62,6 @@ exports.localAuth = function(user, pass) {
 };
 
 // Online Users
-
 exports.addUser = function(user) {
     var deferred = Q.defer();
     onlineDB.loadDatabase(function(err) {
@@ -92,7 +90,7 @@ exports.removeUser = function(user) {
         else onlineDB.findOne({username: user}, function(err, result) {
             if (err) deferred.reject("FIND ERROR");
             if (result.sessions > 1)
-                onlineDB.update({username: usr}, {$set: {sessions: result.sessions - 1}}, function(err) {
+                onlineDB.update({username: user}, {$set: {sessions: result.sessions - 1}}, function(err) {
                     if (err) deferred.reject("UPDATE ERROR");
                     else deferred.resolve("SESSION COUNT DECREMENTED");
                 });
@@ -118,47 +116,294 @@ exports.clearUsers = function() {
     return deferred.promise;
 };
 
-// Link to File, Tag, User, Date, Delete?, Likes, Comment, ID, Hidden, Visibility
-exports.checkViewable = function(post, user) {
-
+exports.getPostCount = function() {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else postDB.count({}, function(err, cnt) {
+            if (err) deferred.reject("COUNT ERROR");
+            else deferred.resolve(cnt);
+        });
+    });
+    return deferred.promise;
 };
 
-exports.uploadFile = function() {
-
+exports.updateKarma = function(user, change) {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            if (!result) deferred.reject("NOT FOUND");
+            else {
+                result.karma += change;
+                userDB.update({user: user}, {$set: result}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve("UPDATE SUCCESS");
+                });
+            }
+        });
+    });
+    return deferred.promise;
 };
 
-exports.addPost = function() {
-
+// Link to File Path, Tag, User, Date, Votes, Comment, ID, Hidden, Text, Icon
+exports.addPost = function(post) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else postDB.insert(post, function(err) {
+            if (err) deferred.reject("INSERT ERROR");
+            else deferred.resolve("INSERT SUCCESS");
+        });
+    });
+    return deferred.promise;
 };
 
-exports.editPost = function() {
-
+exports.deletePost = function(post) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else postDB.update({id: post}, {$set: {hidden: true}}, function(err) {
+            if (err) deferred.reject("UPDATE ERROR");
+            else {
+                fs.unlink("./" + result.path);
+                deferred.resolve("UPDATE SUCCESS");
+            }
+        });
+    });
+    return deferred.promise;
 };
 
-exports.hidePost = function() {
-
+exports.getPostByID = function(post) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else postDB.findOne({id: post}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else deferred.resolve(result);
+        });
+    });
+    return deferred.promise;
 };
 
-exports.toggleVote = function(post, user) {
-
+exports.vote = function(post, user, value) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("DB LOAD ERROR");
+        else postDB.findOne({id: post}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else {
+                var original = "0";
+                if (~ result.votes["-1"].indexOf(user)) original = "-1";
+                else if (~ result.votes["1"].indexOf(user)) original = "1";
+                if (original !== value) // Remove old value
+                    result.votes[original].some(function(e, i) {
+                        if (e === user)
+                            return result.votes[original].splice(i, 1); // Coerce to True
+                        return false;
+                    });
+                if (value !== "0") // Check if voted
+                    result.votes[value].push(user);
+                result.karma += parseInt(original) - parseInt(value); // Update Karma
+                postDB.update({id: post}, {$set: result}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve(parseInt(original) - parseInt(value));
+                });
+            }
+        });
+    });
+    return deferred.promise;
 };
 
-exports.addComment = function() {
-
+exports.commentCount = function(post) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.findOne({id: post}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else deferred.resolve(result.comments.length);
+        });
+    });
+    return deferred.promise;
 };
 
-exports.removeComment = function() {
-
+// User, Date Posted, ID, Text, Icon, Hidden
+exports.addComment = function(post, user, ID, comment) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.findOne({id: post}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else {
+                result.comments[ID] = comment;
+                postDB.update({id: post}, {$set: {comments: result.comments}}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve("UPDATE SUCCESS");
+                });
+            }
+        });
+    });
+    return deferred.promise;
 };
 
-exports.toggleFriend = function() {
-
+exports.deleteComment = function(post, user, commentID) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.findOne({id: post}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else if (result.comments[commentID].user !== user)
+                deferred.reject("NOT OWNER");
+            else {
+                result.comments[commentID].hidden = true;
+                postDB.update({id: post}, {$set: {comments: result.comments}}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve("UPDATE SUCCESS");
+                });
+            }
+        });
+    });
+    return deferred.promise;
 };
 
-exports.renderTimeline = function(user) {
-
+exports.userExists = function(user) {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else if (!result) deferred.reject("NOT FOUND");
+            else deferred.resolve("FOUND");
+        });
+    });
+    return deferred.promise;
 };
 
-exports.renderProfile = function(profile, user) {
+exports.toggleFollow = function(user, target) { // User following target
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else {
+                var pos = result.followees.indexOf(target);
+                if (~ pos)
+                    result.followees.splice(pos, 1);
+                else
+                    result.followees.push(target);
+                userDB.update({user: user}, {$set: {followees: result.followees}}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve("UPDATE SUCCESS");
+                });
+            }
+        });
+    });
+    return deferred.promise;
+};
 
+exports.toggleFollowed = function(user, target) { // User followed by target
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else {
+                var pos = result.followers.indexOf(target);
+                if (~ pos)
+                    result.followers.splice(pos, 1);
+                else
+                    result.followers.push(target);
+                userDB.update({user: user}, {$set: {followers: result.followers}}, function(err) {
+                    if (err) deferred.reject("UPDATE ERROR");
+                    else deferred.resolve("UPDATE SUCCESS");
+                });
+            }
+        });
+    });
+    return deferred.promise;
+};
+
+exports.getFollowing = function(user) {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(result.followees);
+        });
+    });
+    return deferred.promise;
+};
+
+exports.getFollowed = function(user) {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.findOne({user: user}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(result.followers);
+        });
+    });
+    return deferred.promise;
+}
+// Truncate to 20
+exports.filterPosts = function(user, offset, mask) { // Return all the posts objects
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.find({
+            $where: function() { return ~ mask.indexOf(this.user) }
+        }).skip(offset).limit(20).exec(function(err, posts) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(posts);
+        });
+    });
+    return deferred.promise;
+};
+
+// Truncate to 20
+exports.getUserPosts = function(user, offset) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.find({
+            $where: function() { return this.user === user }
+        }).skip(offset).limit(20).exec(function(err, posts) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(posts);
+        });
+    });
+    return deferred.promise;
+};
+
+exports.getUsers = function() {
+    var deferred = Q.defer();
+    userDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else userDB.find({}, function(err, result) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.resolve(result);
+        });
+    });
+    return deferred.promise;
+};
+
+// Truncate to 20
+exports.searchTags = function(tag, offset) {
+    var deferred = Q.defer();
+    postDB.loadDatabase(function(err) {
+        if (err) deferred.reject("LOAD ERROR");
+        else postDB.find({
+            $where: function() { return ~this.tags.indexOf(tag) }
+        }).skip(offset).limit(20).exec(function(err, posts) {
+            if (err) deferred.reject("FIND ERROR");
+            else deferred.reject(args);
+        });
+    });
 };
