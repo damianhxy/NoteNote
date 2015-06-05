@@ -30,7 +30,13 @@ var hbs = exphbs.create({
         },
         isInside: function(element, array, value) {
             return !! ~ array[value].indexOf(element);
-        }
+        },
+        isEqual: function(e1, e2, opts){
+			if(e1 == e2)
+				return opts.fn(this);
+			else
+				return opts.inverse(this);
+		}
     }
 });
 app.use(multer({

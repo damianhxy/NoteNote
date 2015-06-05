@@ -65,20 +65,30 @@ window.onload = function () {
                 e.style.color = "#fff";
                 change = e.dataset.value - sibling.dataset.value;
             } else { // Toggle current
-                change = e.dataset.toggle === "true" ? 0 - e.dataset.value : e.dataset.value;
-                e.dataset.toggle = "false";
-                e.style.color = "";
+                if(e.dataset.toggle === "true"){
+					change = 0 - e.dataset.value;
+					e.style.color = "";
+					e.dataset.toggle = "false";
+				}
+				else{
+					change = e.dataset.value;
+					e.style.color = "#fff";
+					e.dataset.toggle = "true";
+                }
                 res = 0;
             }
             // Modify karma
             var karma = e.parentNode.firstElementChild;
-            karma.textContent = +karma.textContent + change; // Update karma value
+            karma.textContent = parseInt(karma.textContent) + parseInt(change); // Update karma value
             var data = "postID=" + e.parentNode.parentNode.dataset.id + "&value=" + res;
             POST("/vote", data, function(g) {
                 if (!g) {
                     alert("Error encountered while recording vote");
                     // Error, revert?
                 }
+                else{
+					console.log(g);
+				}
             });
         });
     });

@@ -23,6 +23,9 @@
 			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
 			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
+		{{#isEqual user.username this.user}}
+		<a href="#" class="close"><i class="fa fa-close"></i></a>
+		{{/isEqual}}
 	</div>
 	{{/each}}
 	{{else}}

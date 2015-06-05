@@ -130,6 +130,13 @@ body{
 	color: #fff;
 }
 
+.card .close{
+	position: absolute;
+	top : 1em;
+	right: 1em;
+	color: #3498DB;
+}
+
 .card.load{
 	color: #2980B9;
 	text-align: center
