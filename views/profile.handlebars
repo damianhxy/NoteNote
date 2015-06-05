@@ -28,7 +28,7 @@
 			<span>{{this.karma}}</span>
 			<a class="cardup" data-value="1" data-toggle="{{isInside ../user.username this.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
 			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
-			<a class="cardlink" href="#"><i class="fa fa-link"></i></a>
+			<a class="cardlink" href="/posts/{{this.id}}"><i class="fa fa-link"></i></a>
 		</div>
 		{{#isEqual ../user.username ../theuser.username}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>

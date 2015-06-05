@@ -292,9 +292,9 @@ app.get("/posts/:id", function(req, res, next) {
         post.comments.forEach(function(e) {
             e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
         });
-        res.render("post", {
+        res.render("homepage", {
             user: req.user,
-            post: post
+            posts: [post]
         });
     })
     .fail(function(err) {
