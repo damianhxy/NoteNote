@@ -64,18 +64,20 @@ window.onload = function () {
                 e.dataset.toggle = "true";
                 e.style.color = "#fff";
                 change = e.dataset.value - sibling.dataset.value;
+                res = e.dataset.value;
             } else { // Toggle current
-                if(e.dataset.toggle === "true"){
+                if (e.dataset.toggle === "true") {
 					change = 0 - e.dataset.value;
 					e.style.color = "";
 					e.dataset.toggle = "false";
+                    res = 0;
 				}
-				else{
+				else {
 					change = e.dataset.value;
 					e.style.color = "#fff";
 					e.dataset.toggle = "true";
+                    res = e.dataset.value;
                 }
-                res = 0;
             }
             // Modify karma
             var karma = e.parentNode.firstElementChild;
@@ -86,7 +88,7 @@ window.onload = function () {
                     alert("Error encountered while recording vote");
                     // Error, revert?
                 }
-                else{
+                else {
 					console.log(g);
 				}
             });
@@ -107,88 +109,4 @@ window.onload = function () {
         };
         xmlhttp.send(data);
     }
-/*
-	document.querySelector("[data-toggle='true']").style.color = "#fff";
-
-	function up(id, parent){
-		var x = parent.querySelector(".cardup"),
-			y = parent.querySelector(".carddown"),
-			z = parent.querySelector("span");
-		if(x.dataset.toggle == "false" && y.dataset.toggle == "true"){
-			x.style.color = "#fff";
-			y.style.color = "";
-			z.textContent = +z.textContent +2;
-			post("up",id);
-		}
-		else if(x.dataset.toggle == "false" && y.dataset.toggle == "false"){
-			x.style.color = "#fff";
-			y.style.color = "";
-			z.textContent = +z.textContent +1;
-			post("up",id);
-		}
-		else{
-			x.style.color = "";
-			post("un",id);
-		}
-	}
-
-	function down(id, parent){
-		var x = parent.querySelector(".cardup"),
-			y = parent.querySelector(".carddown"),
-			z = parent.querySelector("span");
-		if(y.dataset.toggle == "false" && x.dataset.toggle == "true"){
-			y.style.color = "#fff";
-			x.style.color = "";
-			z.textContent = +z.textContent -2;
-			post("up",id);
-		}
-		else if(y.dataset.toggle == "false" && x.dataset.toggle == "false"){
-			y.style.color = "#fff";
-			x.style.color = "";
-			z.textContent = +z.textContent -1;
-			post("up",id);
-		}
-		else{
-			y.style.color = "";
-			post("un",id);
-		}
-	}
-
-	//ajax (delete/vote/follow)
-	function post(action, subject){
-		var xmlhttp, url, up;
-		if (window.XMLHttpRequest)
-			xmlhttp=new XMLHttpRequest();
-		else
-			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-
-		if(action === 'd'){
-			url = "/deletepost";
-			up = "postID="+subject;
-		}
-		else if(action === 'up'){
-			url = "/vote";
-			up = "value=1&postID="+subject;
-		}
-		else if(action === 'un'){
-			url = "/vote";
-			up = "value=0&postID="+subject;
-		}
-		else if(action === 'do'){
-			url = "/vote";
-			up = "value=-1&postID="+subject;
-		}
-		else if(action === 'f'){
-			url = "/follow",
-			up = "userID="+subject;
-		}
-
-		xmlhttp.onreadystatechange = function(){
-			if(xmlhttp.readyState == 4 && xmlhttp.status = 200)
-				//perform action
-		}
-		xmlhttp.open("POST",url,true);
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlhttp.send(up);
-	}*/
 }

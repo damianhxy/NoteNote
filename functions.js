@@ -202,7 +202,7 @@ exports.vote = function(post, user, value) {
                 var original = "0";
                 if (~ result.votes["-1"].indexOf(user)) original = "-1";
                 else if (~ result.votes["1"].indexOf(user)) original = "1";
-                if (original !== value) // Remove old value
+                if (original !== "0" && original !== value) // Remove old value
                     result.votes[original].some(function(e, i) {
                         if (e === user)
                             return result.votes[original].splice(i, 1); // Coerce to True
