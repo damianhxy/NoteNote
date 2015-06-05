@@ -3,8 +3,10 @@
 	<div class="cardpic"></div>
 	<p class="cardname">{{theuser.username}}</p>
 	<p class="cardinfo">{{theuser.realname}}</p>
-	<p class="cardinfo">{{theuser.karma}} karma | {{followerCount}} followers | Following {{followeeCount}} people</p>
-	<p class="cardinfo"><a href="">Follow</a></p>
+	<p class="cardinfo"><span id="karmacount">{{theuser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | following {{followeeCount}}</p>
+	{{#isEqual user.username theuser.username}}{{else}}
+		<a href="" class="cardfollow" data-fvalue="1" data-ftoggle="{{isFollower}}" data-ftarget="{{theuser.username}}">Follow</a>
+	{{/isEqual}}
 </div>
 <div class="cardcont">
 	{{#if posts}}
@@ -23,10 +25,10 @@
 			{{/each}}
 		</div>
 		<div class="cardcontrols">
-			<span href="">{{this.karma}}</span>
-			<a href="#"><i class="fa fa-arrow-up"></i></a>
-			<a href="#"><i class="fa fa-arrow-down"></i></a>
-			<a href="#"><i class="fa fa-comment"></i></a>
+			<span>{{this.karma}}</span>
+			<a class="cardup" data-value="1" data-toggle="{{isInside ../user.username this.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
+			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
+			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
 		{{#isEqual ../user.username ../theuser.username}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>

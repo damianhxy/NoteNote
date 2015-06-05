@@ -11,7 +11,7 @@
 		{{#each users}}
 		<tr>
 			<td>{{this.rank}}</td>
-			<td>{{this.username}}</td>
+			<td><a href="/profile/{{this.username}}">{{this.username}}</a></td>
 			<td>{{this.karma}}</td>
 		</tr>
 		{{/each}}

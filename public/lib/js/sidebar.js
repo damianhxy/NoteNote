@@ -80,8 +80,10 @@ window.onload = function () {
                 }
             }
             // Modify karma
-            var karma = e.parentNode.firstElementChild;
+            var karma = e.parentNode.firstElementChild,
+				karma2 = document.getElementById("karmacount");
             karma.textContent = parseInt(karma.textContent) + parseInt(change); // Update karma value
+            if(karma2) karma2.textContent = parseInt(karma2.textContent) + parseInt(change); // Update karma value
             var data = "postID=" + e.parentNode.parentNode.dataset.id + "&value=" + res;
             POST("/vote", data, function(g) {
                 if (!g) {
@@ -116,6 +118,31 @@ window.onload = function () {
 			del(e.parentElement)
 		});
     });
+	
+	var cf = document.querySelector(".cardfollow");
+	if(cf)	cf.addEventListener("click", function(f) {
+		f.preventDefault();
+		var fo = document.getElementById("followercount");
+		var data = "userID=" + cf.dataset.ftarget;
+		POST("/follow", data, function(g) {
+			if (cf.dataset.ftoggle === "true") {
+				cf.style.background = "#2ECC71";
+				cf.style.boxShadow = "0 3px 0 #27AE60";
+				cf.textContent="Follow";
+				cf.dataset.ftoggle = "false";
+				if(fo)
+					fo.textContent = parseInt(fo.textContent) - 1;
+			}
+			else {
+				cf.style.background = "#E74C3C";
+				cf.style.boxShadow = "0 3px 0 #C0392B";
+				cf.textContent="Unfollow";
+				cf.dataset.ftoggle = "true";
+				if(fo)
+					fo.textContent = parseInt(fo.textContent) + 1;
+			}
+		});
+	});
 	
     function POST(url, data, callback) {
         var xmlhttp = new XMLHttpRequest();

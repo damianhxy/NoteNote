@@ -36,6 +36,9 @@ var hbs = exphbs.create({
 				return opts.fn(this);
 			else
 				return opts.inverse(this);
+		},
+		is: function (a, b){
+			return a == b;
 		}
     }
 });
@@ -296,6 +299,9 @@ app.post("/follow", function(req, res, next) {
     .then(func.userExists(req.body.userID))
     .then(func.toggleFollow(req.user.username, req.body.userID))
     .then(func.toggleFollowed(req.body.userID, req.user.username))
+    .then(function(){
+		res.send("Success");
+	})
     .fail(function(err) {
         console.log("Could not toggle follow: " + err);
         res.status(400).send("Failed to toggle follow");

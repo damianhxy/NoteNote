@@ -234,6 +234,23 @@ body{
 	margin-left: 9em;
 }
 
+.card .cardfollow{
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	padding: 0.5em 1em;
+	color: #fff;
+	border-radius: 3px;
+	background: #2ECC71;
+	box-shadow: 0 3px 0 #27AE60;	
+	transition: 100ms;
+}
+
+.card .cardfollow:active{
+	transform: translateY(3px);
+	box-shadow: 0 0 0 !important;
+}
+
 table {
 	width: 100%;
     border-radius: 3px;
