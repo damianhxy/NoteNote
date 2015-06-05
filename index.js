@@ -227,14 +227,17 @@ app.post("/addpost", function(req, res, next) {
     if (latest && !latest.truncated)
         func.getPostCount()
         .then(function(count) {
+            req.body.tags = (req.body.tags || "untagged").split(",");
+            if (req.body.tags)
+                req.body.tags.map(function(e) {
+                    e = e.toLowerCase();
+                });
             return func.addPost({
                 "path": latest.path.slice(6),
                 "filename": latest.name,
                 "original": latest.originalname,
                 "extension": latest.extension,
-                "tags": (req.body.tags || "untagged").split(",").map(function(e) {
-                    e = e.toLowerCase();
-                }),
+                "tags": req.body.tags,
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,

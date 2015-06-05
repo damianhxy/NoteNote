@@ -162,6 +162,7 @@ window.onload = function () {
 	var cc = document.querySelectorAll(".cardcom .comsubmit");
 	if(cc) Array.prototype.forEach.call(cc, function(e) {
         e.addEventListener("click", function(f) {
+            f.preventDefault();
 			var v = e.previousElementSibling;
 			POST("/addcomment","comment=" + v.value + "&postID=" + e.dataset.ctarget, function(g) {
 				var d = document.createElement("div");
