@@ -232,7 +232,9 @@ app.post("/addpost", function(req, res, next) {
                 "filename": latest.name,
                 "original": latest.originalname,
                 "extension": latest.extension,
-                "tags": (req.body.tags || "Untagged").split(","),
+                "tags": (req.body.tags || "untagged").split(",").map(function(e) {
+                    e = e.toLowerCase();
+                }),
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
@@ -447,7 +449,7 @@ app.get("/add", function(req, res, next) {
 });
 
 app.get("/search", function(req, res, next) {
-    func.searchTags(req.query.query, 0)
+    func.searchTags(req.query.query.toLowerCase(), 0)
     .then(function(posts) {
         posts.map(function(e) {
             e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
