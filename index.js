@@ -257,10 +257,16 @@ app.post("/deletepost", function(req, res, next) {
         if (req.user.username === post.user)
             return func.deletePost(parseInt(req.body.postID));
         else
-            res.send("Not Owner");
+            res.status(400).send("Not Owner");
     })
     .then(function() {
-        res.send("Delete Success");
+        return func.getPostByID(parseInt(req.body.postID));
+    })
+    .then(function(post) {
+        fs.unlink("./public" + post.path, function(err) {
+            if (err) throw err;
+            res.send("Delete Success");
+        });
     })
     .fail(function(err) {
         console.log("Failed to delete post: " + err);
