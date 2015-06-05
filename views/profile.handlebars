@@ -3,7 +3,7 @@
 	<div class="cardpic"></div>
 	<p class="cardname">{{theuser.username}}</p>
 	<p class="cardinfo">{{theuser.realname}}</p>
-	<p class="cardinfo">{{theuser.karma}} karma | {{followerCount}} followers</p>
+	<p class="cardinfo">{{theuser.karma}} karma | {{followerCount}} followers | Following {{followeeCount}} people</p>
 	<p class="cardinfo"><a href="">Follow</a></p>
 </div>
 <div class="cardcont">
@@ -19,7 +19,7 @@
 		<div class="cardtags">
 			<span>Tags: </span>
 			{{#each this.tags}}
-			<a href="/search/{{this}}">{{this}}</a>
+			<a href="/search?query={{this}}">{{this}}</a>
 			{{/each}}
 		</div>
 		<div class="cardcontrols">
@@ -31,6 +31,6 @@
 	</div>
 	{{/each}}
 	{{else}}
-	
+
 	{{/if}}
 </div>

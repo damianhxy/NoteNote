@@ -4,7 +4,7 @@ window.onload = function () {
     d.setAttribute("id","chassisblack");
     document.body.appendChild(d);
     var s = document.getElementById("sidebar-left");
-    
+
     function f() {
 		mq = window.matchMedia('(max-width: 780px)').matches;
         if (mq) {
@@ -31,18 +31,75 @@ window.onload = function () {
     }
     document.getElementById("branding").onclick = function(){f()};
     d.onclick = function(){if(!window.o)f()};
-    
+
     //style file upload
-    document.getElementById("fakeaf").onclick = function(){
-		document.getElementById("af").click();
-	}
-	
-	document.getElementById("af").onchange = function(){
-		document.querySelector(".addfilename").textContent = document.getElementById("af").value.split("\\").pop() || "Your file name will appear here";
-	}
-	
+    if (document.getElementById("fakeaf")) {
+        document.getElementById("fakeaf").onclick = function(){
+    		document.getElementById("af").click();
+    	}
+
+    	document.getElementById("af").onchange = function(){
+    		document.querySelector(".addfilename").textContent = document.getElementById("af").value.split("\\").pop()
+                || "Your file name will appear here";
+    	}
+    }
+
+    //style votes
+    var active = document.querySelectorAll("[data-toggle='true']");
+    Array.prototype.forEach.call(active, function(e) {
+        e.style.color = "#fff";
+    });
+
+    //vote button style change
+    var voteButtons = document.querySelectorAll("[data-toggle]");
+    Array.prototype.forEach.call(voteButtons, function(e) {
+        e.addEventListener("click", function(f) {
+            f.preventDefault();
+            var res = e.dataset.value; // Value of option picked
+            var change = 0; // Difference
+            var sibling = e.className === "cardup" ? e.nextElementSibling : e.previousElementSibling;
+            if (sibling.dataset.toggle === "true") { // Toggle off sibling
+                sibling.dataset.toggle = "false";
+                sibling.style.color = ""; // Turn it blank
+                e.dataset.toggle = "true";
+                e.style.color = "#fff";
+                change = e.dataset.value - sibling.dataset.value;
+            } else { // Toggle current
+                change = e.dataset.toggle === "true" ? 0 - e.dataset.value : e.dataset.value;
+                e.dataset.toggle = "false";
+                e.style.color = "";
+                res = 0;
+            }
+            // Modify karma
+            var karma = e.parentNode.firstElementChild;
+            karma.textContent = +karma.textContent + change; // Update karma value
+            var data = "postID=" + e.parentNode.parentNode.dataset.id + "&value=" + res;
+            POST("/vote", data, function(g) {
+                if (!g) {
+                    alert("Error encountered while recording vote");
+                    // Error, revert?
+                }
+            });
+        });
+    });
+
+    function POST(url, data, callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", url, callback);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState === 4 && xmlhttp.status !== 200) {
+                callback(null);
+            }
+        };
+        xmlhttp.onload = function() {
+            return callback(xmlhttp.responseText);
+        };
+        xmlhttp.send(data);
+    }
+/*
 	document.querySelector("[data-toggle='true']").style.color = "#fff";
-	
+
 	function up(id, parent){
 		var x = parent.querySelector(".cardup"),
 			y = parent.querySelector(".carddown"),
@@ -64,7 +121,7 @@ window.onload = function () {
 			post("un",id);
 		}
 	}
-	
+
 	function down(id, parent){
 		var x = parent.querySelector(".cardup"),
 			y = parent.querySelector(".carddown"),
@@ -86,7 +143,7 @@ window.onload = function () {
 			post("un",id);
 		}
 	}
-	
+
 	//ajax (delete/vote/follow)
 	function post(action, subject){
 		var xmlhttp, url, up;
@@ -94,7 +151,7 @@ window.onload = function () {
 			xmlhttp=new XMLHttpRequest();
 		else
 			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		
+
 		if(action === 'd'){
 			url = "/deletepost";
 			up = "postID="+subject;
@@ -115,13 +172,13 @@ window.onload = function () {
 			url = "/follow",
 			up = "userID="+subject;
 		}
-		
+
 		xmlhttp.onreadystatechange = function(){
-			if(xmlhttp.readyState == 4 && xmlhttp.status = 200) 
+			if(xmlhttp.readyState == 4 && xmlhttp.status = 200)
 				//perform action
 		}
 		xmlhttp.open("POST",url,true);
 		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xmlhttp.send(up);
-	}
+	}*/
 }

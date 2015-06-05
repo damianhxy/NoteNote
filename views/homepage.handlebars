@@ -2,7 +2,7 @@
 	<div class="card searchbar"><form method="GET" action="/search"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..." name="query"><a href="#" onclick="document.forms[0].submit()"><i class="fa fa-arrow-right"></i></a></form></div>
 	{{#if posts}}
 	{{#each posts}}
-	<div class="card">
+	<div class="card" data-ID="{{this.id}}">
 		<div class="cardpic" style="background:#{{this.icon}}"></div>
 		<p class="cardname"><a href="/profile/{{this.user}}">{{this.user}}</a></p>
 		<p class="carddate">{{this.date}}</p>
@@ -14,13 +14,13 @@
 		<div class="cardtags">
 			<span>Tags: </span>
 			{{#each this.tags}}
-			<a href="/search/{{this}}">{{this}}</a>
+			<a href="/search?query={{this}}">{{this}}</a>
 			{{/each}}
 		</div>
 		<div class="cardcontrols">
-			<span href="">{{this.karma}}</span>
-			<a class="cardup" href="#" onclick="up({{this.id}}, this.parentElement)" data-toggle="{{isInside user.username this.votes['1']}}"><i class="fa fa-arrow-up"></i></a>
-			<a class="carddown" href="#" onclick="down({{this.id}}, this.parentElement)" data-toggle="{{isInside user.username this.votes['-1']}}"><i class="fa fa-arrow-down"></i></a>
+			<span>{{this.karma}}</span>
+			<a class="cardup" data-value="1" data-toggle="{{isInside ../user.username this.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
+			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
 			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
 	</div>

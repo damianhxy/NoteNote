@@ -28,8 +28,8 @@ var hbs = exphbs.create({
                 return "fa-file-pdf-o";
             return "fa-file-o";
         },
-        isInside: function(element, array) {
-            return !! ~ array.indexOf(element);
+        isInside: function(element, array, value) {
+            return !! ~ array[value].indexOf(element);
         }
     }
 });
@@ -305,15 +305,20 @@ app.get("/profile/:userID", function(req, res, next) {
     })
     .then(function(followers) {
 		scope.followers = followers;
-		return func.getUserByID(req.params.userID);
+        return func.getFollowing(req.params.userID);
 	})
+    .then(function(followees) {
+        scope.followees = followees;
+        return func.getUserByID(req.params.userID);
+    })
     .then(function(theuser) {
         res.render("profile", {
             user: req.user,
             theuser: theuser,
             posts: scope.posts,
             isFollower: !! ~ scope.followers.indexOf(req.user.username),
-            followerCount: scope.followers.length - 1
+            followerCount: scope.followers.length,
+            followeeCount: scope.followees.length - 1
         });
     })
     .fail(function(err) {
@@ -333,9 +338,9 @@ app.post("/profile", function(req, res, next) { // Returns (bool)follows, follow
 }); // Render Profile
 
 app.post("/vote", function(req, res, next) {
-    func.vote(req.body.postID, req.user.username, req.body.value)
-    .then(function(diff) {
-        return func.updateKarma(req.body.postID, diff);
+    func.vote(parseInt(req.body.postID), req.user.username, req.body.value)
+    .then(function(obj) {
+        return func.updateKarma(obj.user, obj.diff);
     })
     .then(function() {
         res.send("SUCCESS");

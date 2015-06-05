@@ -210,10 +210,13 @@ exports.vote = function(post, user, value) {
                     });
                 if (value !== "0") // Check if voted
                     result.votes[value].push(user);
-                result.karma += parseInt(original) - parseInt(value); // Update Karma
+                result.karma += parseInt(value) - parseInt(original); // Update Karma
                 postDB.update({id: post}, {$set: result}, function(err) {
                     if (err) deferred.reject("UPDATE ERROR");
-                    else deferred.resolve(parseInt(original) - parseInt(value));
+                    else deferred.resolve({
+                        "user": result.user,
+                        "diff": parseInt(value) - parseInt(original)
+                    }); // Difference
                 });
             }
         });
