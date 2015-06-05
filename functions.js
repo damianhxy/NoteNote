@@ -169,10 +169,7 @@ exports.deletePost = function(post) {
 		if (err) deferred.reject("DB LOAD ERROR");
 		else postDB.update({id: post}, {$set: {hidden: true}}, function(err, result) {
 			if (err) deferred.reject("UPDATE ERROR");
-			else {
-				fs.unlink("./" + result.path);
-				deferred.resolve("UPDATE SUCCESS");
-			}
+			else deferred.resolve("UPDATE SUCCESS");
 		});
 	});
 	return deferred.promise;
