@@ -160,6 +160,9 @@ app.get("/", function(req, res, next) {
         .then(function(posts) {
             posts.map(function(e) {
                 e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+                e.comments.forEach(function(f) {
+                    f.date = moment(f.date).format("DD MMMM YYYY, h:mm:ss a");
+                });
             });
             res.render("homepage", {
                 user: req.user,
@@ -286,6 +289,9 @@ app.get("/posts/:id", function(req, res, next) {
     func.getPostByID(parseInt(req.params.id))
     .then(function(post) {
         post.date = moment(post.date).format("DD MMMM YYYY, h:mm:ss a");
+        post.comments.forEach(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         res.render("post", {
             user: req.user,
             post: post
@@ -300,21 +306,20 @@ app.get("/posts/:id", function(req, res, next) {
 });
 
 app.post("/addcomment", function(req, res, next) {
-	var scope;
     func.commentCount(parseInt(req.body.postID))
     .then(function(count) {
-		scope = count;
-        return func.addComment(parseInt(req.body.postID), req.user.username, count + 1,
+        return func.addComment(parseInt(req.body.postID), req.user.username,
         {
             "user": req.user.username,
             "date": Date.now(),
             "text": req.body.comment,
             "icon": req.user.icon,
-            "hidden": false
+            "hidden": false,
+            "id": count + 1
         });
     })
-    .then(function(){
-		res.send(scope);
+    .then(function(obj) {
+		res.send(obj);
     })
     .fail(function(err) {
         console.log("Failed to add comment: " + err);
@@ -350,6 +355,9 @@ app.get("/profile/:userID", function(req, res, next) {
     .then(function(posts) {
         posts.map(function(e) {
             e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+            e.comments.forEach(function(f) {
+                f.date = moment(f.date).format("DD MMMM YYYY, h:mm:ss a");
+            });
         });
         scope.posts = posts;
         return func.getFollowed(req.params.userID);
@@ -441,6 +449,12 @@ app.get("/add", function(req, res, next) {
 app.get("/search", function(req, res, next) {
     func.searchTags(req.query.query, 0)
     .then(function(posts) {
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+            e.comments.forEach(function(f) {
+                f.date = moment(f.date).format("DD MMMM YYYY, h:mm:ss a");
+            });
+        });
         res.render("homepage", {
 			user: req.user,
 			posts: posts
@@ -471,6 +485,9 @@ app.get("/top", function(req, res, next) {
     .then(function(posts) {
         posts.map(function(e) {
             e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+            e.comments.forEach(function(f) {
+                f.date = moment(f.date).format("DD MMMM YYYY, h:mm:ss a");
+            });
         });
         res.render("homepage", {
             user: req.user,

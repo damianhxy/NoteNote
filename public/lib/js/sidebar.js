@@ -158,15 +158,18 @@ window.onload = function () {
 			});
 		});
 	}
-	
+
 	var cc = document.querySelectorAll(".cardcom .comsubmit");
 	if(cc) Array.prototype.forEach.call(cc, function(e) {
         e.addEventListener("click", function(f) {
 			var v = e.previousElementSibling;
-			POST("/addcomment","comment="+v.value+"&postID="+e.dataset.ctarget,function(g){
+			POST("/addcomment","comment=" + v.value + "&postID=" + e.dataset.ctarget, function(g) {
 				var d = document.createElement("div");
 				d.className += "cardcom";
-				d.innerHTML = '<div class="compic" style="background:'+user.icon+'"></div> <a href="/profile/'+user.username+'" class="comname">'+user.username+'</a> <p class="comdate">Just Now</p><p class="comcontent">'+v.value+'</p><a href="#" class="comclose" data-dtarget="'+g+'"><i class="fa fa-close"></i></a></div>';
+                g = JSON.parse(g);
+                g.date = moment(g.date).format("DD MMMM YYYY, h:mm:ss a");
+				d.innerHTML = '<div class="compic" style="background:'+g.icon+'"></div> <a href="/profile/'+g.user+'" class="comname">'+g.user+'</a> <p class="comdate">'+g.date+'</p><p class="comcontent">'+g.text+'</p><a href="#" class="comclose" data-dtarget="'+g.id+'"></a></div>';
+                v.value = "";
 				e.parentElement.previousElementSibling.appendChild(d);
 			});
 		})

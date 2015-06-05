@@ -235,7 +235,7 @@ exports.commentCount = function(post) {
 };
 
 // User, Date Posted, ID, Text, Icon, Hidden
-exports.addComment = function(post, user, ID, comment) {
+exports.addComment = function(post, user, comment) {
 	var deferred = Q.defer();
 	postDB.loadDatabase(function(err) {
 		if (err) deferred.reject("LOAD ERROR");
@@ -246,7 +246,7 @@ exports.addComment = function(post, user, ID, comment) {
 				result.comments.push(comment);
 				postDB.update({id: post}, {$set: {comments: result.comments}}, function(err) {
 					if (err) deferred.reject("UPDATE ERROR");
-					else deferred.resolve("UPDATE SUCCESS");
+					else deferred.resolve(result.comments.pop());
 				});
 			}
 		});
@@ -264,7 +264,11 @@ exports.deleteComment = function(post, user, commentID) {
 			else if (result.comments[commentID].user !== user)
 				deferred.reject("NOT OWNER");
 			else {
-				result.comments[commentID].hidden = true;
+				result.comments.some(function(e, i) {
+					if (e.id === commentID)
+						return result.comments.splice(i, 1);
+					return false;
+				});
 				postDB.update({id: post}, {$set: {comments: result.comments}}, function(err) {
 					if (err) deferred.reject("UPDATE ERROR");
 					else deferred.resolve("UPDATE SUCCESS");
