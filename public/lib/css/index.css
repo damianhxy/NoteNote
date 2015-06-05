@@ -33,6 +33,7 @@ body{
 	margin: 2em 1em;
 	border-radius: 3px;
 	box-shadow: 0 3px 0 #a7d3ef;
+	transition: 300ms;
 }
 
 .card .cardpic{

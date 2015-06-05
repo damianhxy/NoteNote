@@ -94,7 +94,29 @@ window.onload = function () {
             });
         });
     });
-
+	
+	//delete post
+	function del(object){
+		console.log(object.dataset.id);
+		POST("/deletepost","postID="+object.dataset.id,function(g) {
+			console.log(g);
+			object.style.opacity=0;
+			setTimeout(function(){
+				if(object.removeNode)
+					object.removeNode();
+				else
+					object.remove();
+			},300);
+		});
+	}
+	
+	var closes = document.querySelectorAll("a.close");
+	Array.prototype.forEach.call(closes, function(e) {
+        e.addEventListener("click", function() {
+			del(e.parentElement)
+		});
+    });
+	
     function POST(url, data, callback) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", url, callback);
@@ -103,9 +125,9 @@ window.onload = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status !== 200) {
                 callback(null);
             }
-        };
-        xmlhttp.onload = function() {
-            return callback(xmlhttp.responseText);
+            else{
+				return callback(xmlhttp.responseText);
+			}
         };
         xmlhttp.send(data);
     }

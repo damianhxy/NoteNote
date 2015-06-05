@@ -249,10 +249,10 @@ app.post("/addpost", function(req, res, next) {
 });
 
 app.post("/deletepost", function(req, res, next) {
-    func.getPostByID(req.body.postID)
+    func.getPostByID(parseInt(req.body.postID))
     .then(function(post) {
         if (req.user.username === post.user)
-            return func.deletePost(req.body.postID);
+            return func.deletePost(parseInt(req.body.postID));
         else
             res.send("Not Owner");
     })

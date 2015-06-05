@@ -3,7 +3,7 @@
 	{{#if posts}}
 	{{#each posts}}
 	<div class="card" data-ID="{{this.id}}">
-		<div class="cardpic" style="background:#{{this.icon}}"></div>
+		<div class="cardpic" style="background:{{this.icon}}"></div>
 		<p class="cardname"><a href="/profile/{{this.user}}">{{this.user}}</a></p>
 		<p class="carddate">{{this.date}}</p>
 		<p class="cardcaption">{{this.text}}</p>
@@ -23,7 +23,7 @@
 			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
 			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
-		{{#isEqual user.username this.user}}
+		{{#isEqual ../user.username this.user}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>
 		{{/isEqual}}
 	</div>
