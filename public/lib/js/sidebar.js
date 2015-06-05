@@ -123,33 +123,40 @@ window.onload = function () {
     });
 
 	var cf = document.querySelector(".cardfollow");
-	if(cf)	cf.addEventListener("click", function(f) {
-		f.preventDefault();
-		var fo = document.getElementById("followercount");
-		var data = "userID=" + cf.dataset.ftarget;
-		POST("/follow", data, function(g) {
-            if (!g) {
-                alert("Error encountered while recording follow");
-                // Error, revert?
-            }
-            else if (cf.dataset.ftoggle === "true") {
-				cf.style.background = "#2ECC71";
-				cf.style.boxShadow = "0 3px 0 #27AE60";
-				cf.textContent="Follow";
-				cf.dataset.ftoggle = "false";
-				if(fo)
-					fo.textContent = parseInt(fo.textContent) - 1;
-			}
-			else {
-				cf.style.background = "#E74C3C";
-				cf.style.boxShadow = "0 3px 0 #C0392B";
-				cf.textContent="Unfollow";
-				cf.dataset.ftoggle = "true";
-				if(fo)
-					fo.textContent = parseInt(fo.textContent) + 1;
-			}
+	if(cf){
+		if(cf.dataset.ftoggle === "true"){
+			cf.style.background = "#E74C3C";
+			cf.style.boxShadow = "0 3px 0 #C0392B";
+			cf.textContent="Unfollow";
+		}
+		cf.addEventListener("click", function(f) {
+			f.preventDefault();
+			var fo = document.getElementById("followercount");
+			var data = "userID=" + cf.dataset.ftarget;
+			POST("/follow", data, function(g) {
+				if (!g) {
+					alert("Error encountered while recording follow");
+					// Error, revert?
+				}
+				else if (cf.dataset.ftoggle === "true") {
+					cf.style.background = "#2ECC71";
+					cf.style.boxShadow = "0 3px 0 #27AE60";
+					cf.textContent="Follow";
+					cf.dataset.ftoggle = "false";
+					if(fo)
+						fo.textContent = parseInt(fo.textContent) - 1;
+				}
+				else {
+					cf.style.background = "#E74C3C";
+					cf.style.boxShadow = "0 3px 0 #C0392B";
+					cf.textContent="Unfollow";
+					cf.dataset.ftoggle = "true";
+					if(fo)
+						fo.textContent = parseInt(fo.textContent) + 1;
+				}
+			});
 		});
-	});
+	}
 
     function POST(url, data, callback) {
         var xmlhttp = new XMLHttpRequest();
