@@ -155,6 +155,9 @@ app.get("/", function(req, res, next) {
             return func.filterPosts(req.user.username, 0, mask);
         })
         .then(function(posts) {
+            posts.map(function(e) {
+                e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+            });
             res.render("homepage", {
                 user: req.user,
                 posts: posts
@@ -277,10 +280,11 @@ app.post("/deletepost", function(req, res, next) {
 });
 
 app.get("/posts/:id", function(req, res, next) {
-    console.log(req.params.id);
     func.getPostByID(parseInt(req.params.id))
     .then(function(post) {
-        console.log(post);
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         res.render("post", {
             user: req.user,
             post: post
@@ -335,6 +339,9 @@ app.get("/profile/:userID", function(req, res, next) {
     var scope = {};
     func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         scope.posts = posts;
         return func.getFollowed(req.params.userID);
     })
@@ -453,6 +460,9 @@ app.get("/logout", function(req, res, next) {
 app.get("/top", function(req, res, next) {
     func.getTopPosts()
     .then(function(posts) {
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         res.render("homepage", {
             user: req.user,
             posts: posts
