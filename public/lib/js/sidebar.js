@@ -96,36 +96,43 @@ window.onload = function () {
             });
         });
     });
-	
+
 	//delete post
 	function del(object){
-		console.log(object.dataset.id);
-		POST("/deletepost","postID="+object.dataset.id,function(g) {
-			console.log(g);
-			object.style.opacity=0;
-			setTimeout(function(){
-				if(object.removeNode)
-					object.removeNode();
-				else
-					object.remove();
-			},300);
+		POST("/deletepost", "postID=" + object.dataset.id, function(g) {
+			if (!g) {
+                alert("Error encountered while deleting");
+            }
+            else {
+                object.style.opacity = 0;
+                setTimeout(function(g) {
+                    if (object.removeNode)
+    					object.removeNode();
+    				else
+    					object.remove();
+			     }, 300);
+            }
 		});
 	}
-	
+
 	var closes = document.querySelectorAll("a.close");
 	Array.prototype.forEach.call(closes, function(e) {
         e.addEventListener("click", function() {
 			del(e.parentElement)
 		});
     });
-	
+
 	var cf = document.querySelector(".cardfollow");
 	if(cf)	cf.addEventListener("click", function(f) {
 		f.preventDefault();
 		var fo = document.getElementById("followercount");
 		var data = "userID=" + cf.dataset.ftarget;
 		POST("/follow", data, function(g) {
-			if (cf.dataset.ftoggle === "true") {
+            if (!g) {
+                alert("Error encountered while recording follow");
+                // Error, revert?
+            }
+            else if (cf.dataset.ftoggle === "true") {
 				cf.style.background = "#2ECC71";
 				cf.style.boxShadow = "0 3px 0 #27AE60";
 				cf.textContent="Follow";
@@ -143,18 +150,18 @@ window.onload = function () {
 			}
 		});
 	});
-	
+
     function POST(url, data, callback) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", url, callback);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState === 4 && xmlhttp.status !== 200) {
-                callback(null);
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status !== 200)
+                    return callback(null);
+                else
+                    return callback(xmlhttp.responseText);
             }
-            else{
-				return callback(xmlhttp.responseText);
-			}
         };
         xmlhttp.send(data);
     }
