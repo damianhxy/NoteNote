@@ -282,16 +282,17 @@ app.post("/deletepost", function(req, res, next) {
 app.get("/posts/:id", function(req, res, next) {
     func.getPostByID(parseInt(req.params.id))
     .then(function(post) {
-        posts.map(function(e) {
-            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
-        });
+        post.date = moment(post.date).format("DD MMMM YYYY, h:mm:ss a");
         res.render("post", {
             user: req.user,
             post: post
         });
     })
     .fail(function(err) {
-        next(err);
+        if (err === "NOT FOUND")
+            next();
+        else
+            next(err);
     });
 });
 
@@ -474,7 +475,7 @@ app.get("/top", function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-    res.status(404).send("404 Error: File Not Found");
+    res.status(404).send("404 Error: Not Found");
 });
 
 app.use(function(err, req, res, next) {
