@@ -110,7 +110,7 @@ window.onload = function () {
     					object.removeNode();
     				else
     					object.remove();
-                    document.querySelector(".cardbox").innerHTML += '<div class="card load">There are no notes</div>';
+                    //document.querySelector(".cardbox").innerHTML += '<div class="card load">There are no notes</div>';
 			     }, 300);
             }
 		});
