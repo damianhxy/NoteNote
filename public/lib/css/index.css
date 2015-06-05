@@ -77,6 +77,21 @@ body{
 	box-shadow: 0 3px 0 #C0392B;
 }
 
+.card .cardpreview.docx, .card .cardpreview.doc{
+	background: #3498DB;
+	box-shadow: 0 3px 0 #2980B9;
+}
+
+.card .cardpreview.pptx, .card .cardpreview.ppt{
+	background: #E67E22;
+	box-shadow: 0 3px 0 #D35400;
+}
+
+.card .cardpreview.xlsx, .card .cardpreview.xls{
+	background: #2ECC71;
+	box-shadow: 0 3px 0 #27AE60;
+}
+
 .card .cardpreview:active{
 	transform: translateY(3px);
 	box-shadow: 0 0 0;
