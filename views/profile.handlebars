@@ -1,6 +1,6 @@
 <div class="card searchbar"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..."><a href="#"><i class="fa fa-arrow-right"></i></a></div>
 <div class="card profile">
-	<div class="cardpic"></div>
+	<div class="cardpic" style="background-color:{{user.icon}}"></div>
 	<p class="cardname">{{theuser.username}}</p>
 	<p class="cardinfo">{{theuser.realname}}</p>
 	<p class="cardinfo"><span id="karmacount">{{theuser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | following {{followeeCount}}</p>
@@ -33,7 +33,7 @@
 		{{#isEqual ../user.username ../theuser.username}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>
 		{{/isEqual}}
-		
+
 	</div>
 	{{/each}}
 	{{else}}

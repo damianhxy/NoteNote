@@ -1,0 +1,25 @@
+<div class="card" data-ID="{{post.id}}">
+    <div class="cardpic" style="background:{{post.icon}}"></div>
+    <p class="cardname"><a href="/profile/{{post.user}}">{{post.user}}</a></p>
+    <p class="carddate">{{post.date}}</p>
+    <p class="cardcaption">{{post.text}}</p>
+    <a class="cardpreview {{post.extension}}" href="{{post.path}}" download="{{post.original}}">
+        <i class="fa {{fileType post.extension}}"></i>
+        <span> {{post.original}}</span>
+    </a>
+    <div class="cardtags">
+        <span>Tags: </span>
+        {{#each post.tags}}
+        <a href="/search?query={{this}}">{{this}}</a>
+        {{/each}}
+    </div>
+    <div class="cardcontrols">
+        <span>{{post.karma}}</span>
+        <a class="cardup" data-value="1" data-toggle="{{isInside user.username post.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
+        <a class="carddown" data-value="-1" data-toggle="{{isInside user.username post.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
+        <a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
+    </div>
+    {{#isEqual user.username post.user}}
+    <a href="#" class="close"><i class="fa fa-close"></i></a>
+    {{/isEqual}}
+</div>

@@ -274,6 +274,21 @@ app.post("/deletepost", function(req, res, next) {
     });
 });
 
+app.get("/posts/:id", function(req, res, next) {
+    console.log(req.params.id);
+    func.getPostByID(parseInt(req.params.id))
+    .then(function(post) {
+        console.log(post);
+        res.render("post", {
+            user: req.user,
+            post: post
+        });
+    })
+    .fail(function(err) {
+        next(err);
+    });
+});
+
 app.post("/addcomment", function(req, res, next) {
     func.commentCount(req.body.postID)
     .then(function(count) {
