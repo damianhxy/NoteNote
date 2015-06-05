@@ -376,7 +376,8 @@ exports.getUserPosts = function(user, offset) {
 	postDB.loadDatabase(function(err) {
 		if (err) deferred.reject("LOAD ERROR");
 		else postDB.find({
-			$where: function() { return this.user === user }
+			$where: function() { return this.user === user },
+			hidden: false
 		}).skip(offset).limit(20).exec(function(err, posts) {
 			if (err) deferred.reject("FIND ERROR");
 			else deferred.resolve(posts);

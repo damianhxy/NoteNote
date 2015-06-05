@@ -11,12 +11,12 @@
 <div class="cardcont">
 	{{#if posts}}
 	{{#each posts}}
-	<div class="card">
+	<div class="card" data-ID="{{this.id}}">
 		<p class="carddate">{{this.date}}</p>
 		<p class="cardcaption">{{this.text}}</p>
 		<a class="cardpreview {{this.extension}}" href="{{this.path}}" download="{{this.original}}">
 			<i class="fa {{fileType this.extension}}"></i>
-			<span> {{this.filename}}</span>
+			<span> {{this.original}}</span>
 		</a>
 		<div class="cardtags">
 			<span>Tags: </span>
@@ -30,10 +30,9 @@
 			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
 			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
 		</div>
-		{{#isEqual ../user.username ../theuser.username}}
+		{{#isEqual ../user.username this.user}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>
 		{{/isEqual}}
-
 	</div>
 	{{/each}}
 	{{else}}

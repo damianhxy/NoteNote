@@ -223,7 +223,7 @@ app.post("/addpost", function(req, res, next) {
                 "filename": latest.name,
                 "original": latest.originalname,
                 "extension": latest.extension,
-                "tags": (req.body.tags || "").split(","),
+                "tags": (req.body.tags || "Untagged").split(","),
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
@@ -252,21 +252,23 @@ app.post("/addpost", function(req, res, next) {
 });
 
 app.post("/deletepost", function(req, res, next) {
+    var scope = {};
     func.getPostByID(parseInt(req.body.postID))
     .then(function(post) {
+        scope.post = post;
         if (req.user.username === post.user)
             return func.deletePost(parseInt(req.body.postID));
         else
             res.status(400).send("Not Owner");
     })
     .then(function() {
-        return func.getPostByID(parseInt(req.body.postID));
-    })
-    .then(function(post) {
-        fs.unlink("./public" + post.path, function(err) {
+        fs.unlink("./public" + scope.post.path, function(err) {
             if (err) throw err;
-            res.send("Delete Success");
+            else return func.updateKarma(req.user.username, -scope.post.karma);
         });
+    })
+    .then(function() {
+        res.send("Delete Success");
     })
     .fail(function(err) {
         console.log("Failed to delete post: " + err);
