@@ -158,6 +158,9 @@ app.get("/", function(req, res, next) {
             return func.filterPosts(req.user.username, 0, mask);
         })
         .then(function(posts) {
+            posts.map(function(e) {
+                e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+            });
             res.render("homepage", {
                 user: req.user,
                 posts: posts
@@ -226,7 +229,7 @@ app.post("/addpost", function(req, res, next) {
                 "filename": latest.name,
                 "original": latest.originalname,
                 "extension": latest.extension,
-                "tags": (req.body.tags || "").split(","),
+                "tags": (req.body.tags || "Untagged").split(","),
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
@@ -255,25 +258,44 @@ app.post("/addpost", function(req, res, next) {
 });
 
 app.post("/deletepost", function(req, res, next) {
+    var scope = {};
     func.getPostByID(parseInt(req.body.postID))
     .then(function(post) {
+        scope.post = post;
         if (req.user.username === post.user)
             return func.deletePost(parseInt(req.body.postID));
         else
             res.status(400).send("Not Owner");
     })
     .then(function() {
-        return func.getPostByID(parseInt(req.body.postID));
-    })
-    .then(function(post) {
-        fs.unlink("./public" + post.path, function(err) {
+        fs.unlink("./public" + scope.post.path, function(err) {
             if (err) throw err;
-            res.send("Delete Success");
+            else return func.updateKarma(req.user.username, -scope.post.karma);
         });
+    })
+    .then(function() {
+        res.send("Delete Success");
     })
     .fail(function(err) {
         console.log("Failed to delete post: " + err);
         res.status(400).send("Failed to delete post");
+    });
+});
+
+app.get("/posts/:id", function(req, res, next) {
+    func.getPostByID(parseInt(req.params.id))
+    .then(function(post) {
+        post.date = moment(post.date).format("DD MMMM YYYY, h:mm:ss a");
+        res.render("post", {
+            user: req.user,
+            post: post
+        });
+    })
+    .fail(function(err) {
+        if (err === "NOT FOUND")
+            next();
+        else
+            next(err);
     });
 });
 
@@ -326,6 +348,9 @@ app.get("/profile/:userID", function(req, res, next) {
     var scope = {};
     func.getUserPosts(req.params.userID, 0)
     .then(function(posts) {
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         scope.posts = posts;
         return func.getFollowed(req.params.userID);
     })
@@ -444,6 +469,9 @@ app.get("/logout", function(req, res, next) {
 app.get("/top", function(req, res, next) {
     func.getTopPosts()
     .then(function(posts) {
+        posts.map(function(e) {
+            e.date = moment(e.date).format("DD MMMM YYYY, h:mm:ss a");
+        });
         res.render("homepage", {
             user: req.user,
             posts: posts
@@ -455,7 +483,7 @@ app.get("/top", function(req, res, next) {
 });
 
 app.use(function(req, res, next) {
-    res.status(404).send("404 Error: File Not Found");
+    res.status(404).send("404 Error: Not Found");
 });
 
 app.use(function(err, req, res, next) {

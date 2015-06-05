@@ -44,7 +44,7 @@ body{
 	width: 4em;
 	border-radius: 2em;
 	border: 3px #fff solid;
-	background: #a7d3ef;
+	background: #a7d3ef; // Placeholder
 }
 
 .card .cardname{
@@ -68,7 +68,7 @@ body{
 	color: #fff;
 	border-radius: 3px;
 	background: #444;
-	box-shadow: 0 3px 0 #222;	
+	box-shadow: 0 3px 0 #222;
 	transition: 100ms;
 }
 
@@ -242,7 +242,7 @@ body{
 	color: #fff;
 	border-radius: 3px;
 	background: #2ECC71;
-	box-shadow: 0 3px 0 #27AE60;	
+	box-shadow: 0 3px 0 #27AE60;
 	transition: 100ms;
 }
 
