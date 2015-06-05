@@ -157,6 +157,19 @@ window.onload = function () {
 			});
 		});
 	}
+	
+	var cc = document.querySelectorAll(".cardcom .comsubmit");
+	if(cc) Array.prototype.forEach.call(cc, function(e) {
+        e.addEventListener("click", function(f) {
+			var v = e.previousElementSibling;
+			POST("/addcomment","comment="+v.value+"&postID="+e.dataset.ctarget,function(g){
+				var d = document.createElement("div");
+				d.className += "cardcom";
+				d.innerHTML = '<div class="compic" style="background:'+user.icon+'"></div> <a href="/profile/'+user.username+'" class="comname">'+user.username+'</a> <p class="comdate">Just Now</p><p class="comcontent">'+v.value+'</p><a href="#" class="comclose" data-dtarget="'+g+'"><i class="fa fa-close"></i></a></div>';
+				e.parentElement.previousElementSibling.appendChild(d);
+			});
+		})
+	});
 
     function POST(url, data, callback) {
         var xmlhttp = new XMLHttpRequest();
@@ -164,8 +177,9 @@ window.onload = function () {
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState === 4) {
-                if (xmlhttp.status !== 200)
+                if (xmlhttp.status !== 200){
                     return callback(null);
+				}
                 else
                     return callback(xmlhttp.responseText);
             }

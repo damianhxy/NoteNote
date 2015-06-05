@@ -243,7 +243,7 @@ exports.addComment = function(post, user, ID, comment) {
 			if (err) deferred.reject("FIND ERROR");
 			else if (!result) deferred.reject("NOT FOUND");
 			else {
-				result.comments[ID] = comment;
+				result.comments.push(comment);
 				postDB.update({id: post}, {$set: {comments: result.comments}}, function(err) {
 					if (err) deferred.reject("UPDATE ERROR");
 					else deferred.resolve("UPDATE SUCCESS");

@@ -31,14 +31,17 @@ var hbs = exphbs.create({
         isInside: function(element, array, value) {
             return !! ~ array[value].indexOf(element);
         },
-        isEqual: function(e1, e2, opts){
+        isEqual: function(e1, e2, opts) {
 			if(e1 == e2)
 				return opts.fn(this);
 			else
 				return opts.inverse(this);
 		},
-		is: function (a, b){
+		is: function(a, b) {
 			return a == b;
+		},
+		string: function(a) {
+			return JSON.stringify(a);
 		}
     }
 });
@@ -211,7 +214,7 @@ app.post("/", function(req, res, next) {
     })
     .fail(function() {
         res.status(400).send("Loading Failed");
-    });
+    });s
 });
 
 app.post("/addpost", function(req, res, next) {
@@ -227,7 +230,7 @@ app.post("/addpost", function(req, res, next) {
                 "user": req.user.username,
                 "date": moment().format(),
                 "hidden": false,
-                "comments": {},
+                "comments": [],
                 "votes": {
                     "-1": [],
                     "1": []
@@ -275,9 +278,11 @@ app.post("/deletepost", function(req, res, next) {
 });
 
 app.post("/addcomment", function(req, res, next) {
-    func.commentCount(req.body.postID)
+	var scope;
+    func.commentCount(parseInt(req.body.postID))
     .then(function(count) {
-        return func.addComment(req.body.postID, req.user.username, count + 1,
+		scope = count;
+        return func.addComment(parseInt(req.body.postID), req.user.username, count + 1,
         {
             "user": req.user.username,
             "date": Date.now(),
@@ -285,6 +290,9 @@ app.post("/addcomment", function(req, res, next) {
             "icon": req.user.icon,
             "hidden": false
         });
+    })
+    .then(function(){
+		res.send(scope);
     })
     .fail(function(err) {
         console.log("Failed to add comment: " + err);

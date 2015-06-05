@@ -21,7 +21,24 @@
 			<span>{{this.karma}}</span>
 			<a class="cardup" data-value="1" data-toggle="{{isInside ../user.username this.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
 			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
-			<a class="cardcomment" href="#"><i class="fa fa-comment"></i></a>
+			<a class="cardlink" href="/post/{{this.id}}"><i class="fa fa-link"></i></a>
+		</div>
+		<div class="cardcomments">
+			{{#if comments}}
+			{{#each comments}}
+			<div class="cardcom">
+				<div class="compic" style="background:{{this.icon}}"></div>
+				<a href="/profile/{{this.user}}" class="comname">{{this.user}}</a>
+				<p class="comdate">{{this.date}}</p>
+				<p class="comcontent">{{this.text}}</p>
+				{{#isEqual ../../user.username this.user}}<a href="#" class="comclose" data-dtarget="{{../this.id}}"><i class="fa fa-close"></i></a>{{/isEqual}}
+			</div>
+			{{/each}}
+			{{/if}}
+		</div>
+		<div class="cardcom">
+			<textarea placeholder="Leave a comment..."></textarea>
+			<a href="#" class="comsubmit" data-ctarget="{{this.id}}">Add Comment <i class="fa fa-arrow-right"></i></a>
 		</div>
 		{{#isEqual ../user.username this.user}}
 		<a href="#" class="close"><i class="fa fa-close"></i></a>
