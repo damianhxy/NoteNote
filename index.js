@@ -386,7 +386,10 @@ app.get("/profile/:userID", function(req, res, next) {
         });
     })
     .fail(function(err) {
-        next(err);
+        if (err === "NOT FOUND")
+            next();
+        else
+            next(err);
     });
 });
 
