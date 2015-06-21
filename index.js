@@ -479,7 +479,7 @@ app.get("/logout", function(req, res, next) {
     .then(function() {
         console.log("Logged out " + req.user.username);
         req.logout();
-        req.direct("/");
+        res.redirect("/");
     })
     .fail(function(err) {
         console.log("Sign out failed: " + err);
