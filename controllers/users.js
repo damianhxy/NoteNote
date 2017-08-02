@@ -42,4 +42,8 @@ router.get("/:profile", auth, function(req, res) {
     });
 });
 
+router.post("/follow", auth, function(req, res) {
+    // Increment / Decrement both people
+});
+
 module.exports = router;

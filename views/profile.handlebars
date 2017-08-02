@@ -5,7 +5,7 @@
 	<p class="cardinfo">{{profileUser.realname}}</p>
 	<p class="cardinfo"><span id="karmacount">{{profileUser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | {{followingCount}} following </p>
 	{{#isEqual user.username profileUser.username}}{{else}}
-		<a href="" class="cardfollow" data-fvalue="1" data-ftoggle="{{isFollower}}" data-ftarget="{{profileUser.username}}">Follow</a>
+		<a href="#" class="cardfollow" data-fvalue="1" data-ftoggle="{{isFollower}}" data-ftarget="{{profileUser.username}}">Follow</a>
 	{{/isEqual}}
 </div>
 <div class="cardcont">
@@ -17,3 +17,4 @@
 	<div class="card load">There are no notes</div>
 	{{/if}}
 </div>
+<script src="/js/custom/profile.js"></script>

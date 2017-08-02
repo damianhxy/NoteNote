@@ -10,7 +10,7 @@ exports.add = function(body, username, password) {
     return users.findOneAsync({ username: username })
     .then(function(user) {
         if (user) throw Error("User already exists");
-        if (password !== body.password2) throw Error("Password mismatch!");
+        if (password !== body.password2) throw Error("Password mismatch");
         return bcryptjs.hashAsync(password, 10)
         .then(function(hash) {
             var user = {

@@ -1,8 +1,10 @@
 var Promise = require("bluebird");
+var fs = require("fs");
 var nedb = require("nedb");
 var moment = require("moment-timezone");
 var settings = require("../controllers/settings.js");
 var posts = new nedb({ filename: "./database/posts", autoload: true });
+Promise.promisifyAll(fs);
 Promise.promisifyAll(posts);
 Promise.promisifyAll(posts.find().constructor.prototype);
 
@@ -27,12 +29,25 @@ exports.search = function(search) {
     return posts.findAsync({
         $where: function() {
             return this.tags.indexOf(search) !== -1 || this.description.indexOf(search) !== -1;
-        } 
+        }
     });
 }
 
 exports.findByUser = function(username) {
     return posts.findAsync({ username: username });
+}
+
+exports.get = function(ID) {
+    return posts.findOneAsync({ _id: ID });
+}
+
+exports.delete = function(ID, username) {
+    return posts.findOneAsync({ _id: ID })
+    .then(function(post) {
+        if (post.username !== username) throw Error("Unauthorised");
+        return fs.unlinkAsync("public/" + post.path)
+        .then(posts.removeAsync({ _id: ID }));
+    });
 }
 
 exports.top = function() {

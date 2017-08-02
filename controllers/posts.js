@@ -11,16 +11,6 @@ router.get("/upload", auth, function(req, res) {
     });
 });
 
-router.get("/search", auth, function(req, res) {
-    post.search(req.query.query)
-    .then(function(posts) {
-        res.render("homepage", {
-            user: req.user,
-            posts: posts
-        });
-    });
-});
-
 router.post("/upload", auth, function(req, res) {
     upload.single("file")(req, res, function(err) {
         if (err) {
@@ -34,6 +24,38 @@ router.post("/upload", auth, function(req, res) {
                 res.redirect("/posts/upload");
             });
         }
+    });
+});
+
+router.post("/vote/:id", auth, function(req, res) {
+    var nval = req.body.val;
+    // WIP
+});
+
+router.get("/:id", auth, function(req, res) {
+    post.get(req.params.id)
+    .then(function(ret) {
+        res.render("homepage", {
+            user: req.user,
+            posts: [ret]
+        });
+    });
+});
+
+router.delete("/:id", auth, function(req, res) {
+    post.delete(req.params.id, req.user.username)
+    .then(function() {
+        res.end();
+    });
+});
+
+router.get("/search", auth, function(req, res) {
+    post.search(req.query.query)
+    .then(function(posts) {
+        res.render("homepage", {
+            user: req.user,
+            posts: posts
+        });
     });
 });
 
