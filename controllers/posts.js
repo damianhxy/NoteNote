@@ -11,6 +11,16 @@ router.get("/upload", auth, function(req, res) {
     });
 });
 
+router.get("/search", auth, function(req, res) {
+    post.search(req.query.query)
+    .then(function(posts) {
+        res.render("homepage", {
+            user: req.user,
+            posts: posts
+        });
+    });
+});
+
 router.post("/upload", auth, function(req, res) {
     upload.single("file")(req, res, function(err) {
         if (err) {

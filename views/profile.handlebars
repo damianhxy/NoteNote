@@ -3,7 +3,7 @@
 	<div class="cardpic" style="background: url(https://api.adorable.io/avatars/150/{{user.username}}.png) center no-repeat"></div>
 	<p class="cardname">{{profileUser.username}}</p>
 	<p class="cardinfo">{{profileUser.realname}}</p>
-	<p class="cardinfo"><span id="karmacount">{{profileUser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | following {{followingCount}}</p>
+	<p class="cardinfo"><span id="karmacount">{{profileUser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | {{followingCount}} following </p>
 	{{#isEqual user.username profileUser.username}}{{else}}
 		<a href="" class="cardfollow" data-fvalue="1" data-ftoggle="{{isFollower}}" data-ftarget="{{profileUser.username}}">Follow</a>
 	{{/isEqual}}

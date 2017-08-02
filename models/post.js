@@ -13,8 +13,8 @@ exports.add = function(req) {
         name: req.body.name,
         path: req.file.path.slice(6),
         description: req.body.text,
-        time: moment.tz("Asia/Singapore").format(),
-        timePretty: moment.tz("Asia/Singapore").format(settings.TIME_FORMAT),
+        date: moment.tz("Asia/Singapore").format(),
+        datePretty: moment.tz("Asia/Singapore").format(settings.POST_TIME_FORMAT),
         tags: tags,
         karma: 0,
         upvotes: [],
@@ -22,6 +22,14 @@ exports.add = function(req) {
     };
     return posts.insertAsync(post);
 };
+
+exports.search = function(search) {
+    return posts.findAsync({
+        $where: function() {
+            return this.tags.indexOf(search) !== -1 || this.description.indexOf(search) !== -1;
+        } 
+    });
+}
 
 exports.findByUser = function(username) {
     return posts.findAsync({ username: username });

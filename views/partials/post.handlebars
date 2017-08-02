@@ -3,8 +3,8 @@
     <p class="cardname">
         <a href="/profile/{{this.username}}">{{this.username}}</a>
     </p>
-    <p class="carddate">{{this.date}}</p>
-    <p class="cardcaption">{{this.body}}</p>
+    <p class="carddate">{{this.datePretty}}</p>
+    <p class="cardcaption">{{this.description}}</p>
     <a class="cardpreview" href="{{this.path}}">
         <i class="fa {{fileType this.path}}"></i>
         <span>{{this.name}}</span>
@@ -12,7 +12,7 @@
     <div class="cardtags">
         <span>Tags: </span>
         {{#each this.tags}}
-        <a href="/search?query={{this}}">{{this}}</a>
+        <a href="/posts/search?query={{this}}">{{this}}</a>
         {{/each}}
     </div>
     <div class="cardcontrols">

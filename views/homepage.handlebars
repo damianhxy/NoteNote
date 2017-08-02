@@ -1,5 +1,5 @@
 <div class="cardcont">
-	<div class="card searchbar"><form method="GET" action="/search"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..." name="query"><a href="#" onclick="document.forms[0].submit()"><i class="fa fa-arrow-right"></i></a></form></div>
+	<div class="card searchbar"><form method="GET" action="/posts/search"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..." name="query"><a href="#" onclick="document.forms[0].submit()"><i class="fa fa-arrow-right"></i></a></form></div>
 	{{#if posts}}
 	{{#each posts}}
 	{{> post this}}
