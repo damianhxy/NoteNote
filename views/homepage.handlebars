@@ -2,50 +2,9 @@
 	<div class="card searchbar"><form method="GET" action="/search"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..." name="query"><a href="#" onclick="document.forms[0].submit()"><i class="fa fa-arrow-right"></i></a></form></div>
 	{{#if posts}}
 	{{#each posts}}
-	<div class="card" data-ID="{{this.id}}">
-		<div class="cardpic" style="background:{{this.icon}}"></div>
-		<p class="cardname"><a href="/profile/{{this.user}}">{{this.user}}</a></p>
-		<p class="carddate">{{this.date}}</p>
-		<p class="cardcaption">{{this.text}}</p>
-		<a class="cardpreview {{this.extension}}" href="{{this.path}}" download="{{this.original}}">
-			<i class="fa {{fileType this.extension}}"></i>
-			<span> {{this.original}}</span>
-		</a>
-		<div class="cardtags">
-			<span>Tags: </span>
-			{{#each this.tags}}
-			<a href="/search?query={{this}}">{{this}}</a>
-			{{/each}}
-		</div>
-		<div class="cardcontrols">
-			<span>{{this.karma}}</span>
-			<a class="cardup" data-value="1" data-toggle="{{isInside ../user.username this.votes '1'}}" href="#"><i class="fa fa-arrow-up"></i></a>
-			<a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.votes '-1'}}" href="#"><i class="fa fa-arrow-down"></i></a>
-			<a class="cardlink" href="/posts/{{this.id}}"><i class="fa fa-link"></i></a>
-		</div>
-		<div class="cardcomments">
-			{{#if comments}}
-			{{#each comments}}
-			<div class="cardcom">
-				<div class="compic" style="background:{{this.icon}}"></div>
-				<a href="/profile/{{this.user}}" class="comname">{{this.user}}</a>
-				<p class="comdate">{{this.date}}</p>
-				<p class="comcontent">{{this.text}}</p>
-				{{#isEqual ../../user.username this.user}}<a href="#" class="comclose" data-dtarget="{{../this.id}}"><i class="fa fa-close"></i></a>{{/isEqual}}
-			</div>
-			{{/each}}
-			{{/if}}
-		</div>
-		<div class="cardcom">
-			<textarea placeholder="Leave a comment..."></textarea>
-			<a href="#" class="comsubmit" data-ctarget="{{this.id}}">Add Comment <i class="fa fa-arrow-right"></i></a>
-		</div>
-		{{#isEqual ../user.username this.user}}
-		<a href="#" class="close"><i class="fa fa-close"></i></a>
-		{{/isEqual}}
-	</div>
+	{{> post this}}
 	{{/each}}
-</div>
 	{{else}}
 	<div class="card load">There are no notes</div>
 	{{/if}}
+</div>

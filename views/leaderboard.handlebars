@@ -10,7 +10,7 @@
 	<tbody>
 		{{#each users}}
 		<tr>
-			<td>{{this.rank}}</td>
+			<td>{{add @index 1}}</td>
 			<td><a href="/profile/{{this.username}}">{{this.username}}</a></td>
 			<td>{{this.karma}}</td>
 		</tr>

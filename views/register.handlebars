@@ -7,12 +7,12 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<title>notenote</title>
-	<link rel="author" type="text/plain" href="/humans.txt">
-	<link rel="icon" href="/media/favicon.ico" type="image/ico">
-	<link rel="apple-touch-icon" href="/media/favicon.ico" type="image/ico">
-	<link href="/lib/css/base.css" rel="stylesheet">
-	<link href="/lib/css/font-awesome.min.css" rel="stylesheet">
-	<link href="/lib/css/lemonade.min.css" rel="stylesheet">
+	<link rel="author" href="/humans.txt">
+	<link rel="icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/media/favicon.png" type="image/png">
+	<link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/css/lemonade.min.css">
 	<link href='http://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -25,13 +25,11 @@
 					<p>- share knowledge -</p><br>
 				</div></a>
 				<div class="bit-2 right">
-					<form method="POST" action="/signup">
+					<form method="POST" action="/users/signup">
 						<p class="m login">New Account</p>
 						<input type="text" placeholder="username" class="text" name="username">
 						<input type="password" placeholder="password" class="text" name="password">
 						<input type="password" placeholder="confirm password" class="text" name="password2">
-						<input type="email" placeholder="email" class="text" name="email">
-						<input type="text" placeholder="school" class="text" name="school">
 						<input type="text" placeholder="real name" class="text" name="realname">
 						<input type="submit" class="button" value="Submit">
 						<p class="or">or</p>
