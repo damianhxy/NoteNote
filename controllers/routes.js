@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
+var passport = require("passport");
 var user = require("../models/user.js");
 var post = require("../models/post.js");
+var auth = require("../middlewares/auth.js");
 
 router.get("/", function(req, res) {
     if (req.user) {
@@ -46,6 +48,22 @@ router.use("/users", require("./users.js"));
 
 /* Posts */
 router.use("/posts", require("./posts.js"));
+
+/* Signin / Signout */
+router.get("/signout", auth, function(req, res) {
+    req.logout();
+    res.redirect("/");
+});
+
+router.post("/signin", passport.authenticate("local-signin", {
+    successRedirect: "/",
+    failureRedirect: "/"
+}));
+
+router.post("/signup", passport.authenticate("local-signup", {
+    successRedirect: "/",
+    failureRedirect: "/"
+}));
 
 /* 404 & 500 */
 router.use(function(req, res) {

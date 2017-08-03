@@ -6,21 +6,6 @@ var user = require("../models/user.js");
 var post = require("../models/post.js");
 var flash = require("express-flash");
 
-router.get("/signout", auth, function(req, res) {
-    req.logout();
-    res.redirect("/");
-});
-
-router.post("/signin", passport.authenticate("local-signin", {
-    successRedirect: "/",
-    failureRedirect: "/"
-}));
-
-router.post("/signup", passport.authenticate("local-signup", {
-    successRedirect: "/",
-    failureRedirect: "/"
-}));
-
 router.get("/:profile", auth, function(req, res) {
     user.get(req.params.profile)
     .then(function(ret) {

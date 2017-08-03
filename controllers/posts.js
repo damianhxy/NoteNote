@@ -32,16 +32,6 @@ router.post("/vote/:id", auth, function(req, res) {
     // WIP
 });
 
-router.get("/:id", auth, function(req, res) {
-    post.get(req.params.id)
-    .then(function(ret) {
-        res.render("homepage", {
-            user: req.user,
-            posts: [ret]
-        });
-    });
-});
-
 router.delete("/:id", auth, function(req, res) {
     post.delete(req.params.id, req.user.username)
     .then(function() {
@@ -55,6 +45,16 @@ router.get("/search", auth, function(req, res) {
         res.render("homepage", {
             user: req.user,
             posts: posts
+        });
+    });
+});
+
+router.get("/:id", auth, function(req, res) {
+    post.get(req.params.id)
+    .then(function(ret) {
+        res.render("homepage", {
+            user: req.user,
+            posts: [ret]
         });
     });
 });
