@@ -45,9 +45,21 @@ exports.delete = function(ID, username) {
     return posts.findOneAsync({ _id: ID })
     .then(function(post) {
         if (post.username !== username) throw Error("Unauthorised");
-        return fs.unlinkAsync("public/" + post.path)
-        .then(posts.removeAsync({ _id: ID }));
-    });
+        return fs.unlinkAsync("public/" + post.path);
+    })
+    .then(posts.removeAsync({ _id: ID }));
+}
+
+exports.getStream = function(following, start, end) {
+    return posts.find({
+        $where: function() {
+            return following.indexOf(this.username) !== -1;
+        }
+    })
+    .sort({ date: -1 })
+    .skip(start)
+    .limit(end - start + 1)
+    .execAsync();
 }
 
 exports.top = function() {

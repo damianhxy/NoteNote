@@ -264,6 +264,7 @@ body{
 
 .card .cardfollow{
 	position: absolute;
+	cursor: pointer;
 	top: 1em;
 	right: 1em;
 	padding: 0.5em 1em;

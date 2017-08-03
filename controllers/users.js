@@ -4,7 +4,6 @@ var router = express.Router();
 var auth = require("../middlewares/auth.js");
 var user = require("../models/user.js");
 var post = require("../models/post.js");
-var flash = require("express-flash");
 
 router.get("/:profile", auth, function(req, res) {
     user.get(req.params.profile)
@@ -22,13 +21,19 @@ router.get("/:profile", auth, function(req, res) {
     })
     .catch(function(err) {
         console.error(err.message);
-        flash("error", err.message);
+        req.flash("error", err.message);
         res.redirect(req.header.referrer || "/");
     });
 });
 
-router.post("/follow", auth, function(req, res) {
+router.post("/follow/:target", auth, function(req, res) {
     // Increment / Decrement both people
+    var follower = req.user.username;
+    var following = req.params.target;
+    user.addFollow(follower, following)
+    .then(function() {
+        res.end();
+    });
 });
 
 module.exports = router;

@@ -38,7 +38,7 @@
         <textarea placeholder="Leave a comment..."></textarea>
         <a href="#" class="comsubmit" data-ctarget="{{this._id}}">Add Comment <i class="fa fa-arrow-right"></i></a>
     </div>
-    {{#isEqual ../user.username ../profileUser.username}}
+    {{#isEqual user.username this.username}}
     <i class="close" data-dtarget="{{this._id}}"><i class="fa fa-close"></i></i>
     {{/isEqual}}
 </div>

@@ -54,7 +54,7 @@ module.exports = function(app, express) {
             })
             .catch(function(err) {
                 console.error(err.message);
-                done(null, false);
+                done(null, false, { message: err.message });
             });
         }
     ));
@@ -69,7 +69,7 @@ module.exports = function(app, express) {
             })
             .catch(function(err) {
                 console.error(err.message);
-                done(null, false);
+                done(null, false, { message: err.message });
             });
         }
     ));

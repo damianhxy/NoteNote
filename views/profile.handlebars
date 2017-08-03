@@ -5,13 +5,13 @@
 	<p class="cardinfo">{{profileUser.realname}}</p>
 	<p class="cardinfo"><span id="karmacount">{{profileUser.karma}}</span> karma | <span id="followercount">{{followerCount}}</span> followers | {{followingCount}} following </p>
 	{{#isEqual user.username profileUser.username}}{{else}}
-		<a href="#" class="cardfollow" data-fvalue="1" data-ftoggle="{{isFollower}}" data-ftarget="{{profileUser.username}}">Follow</a>
+		<span class="cardfollow" data-fvalue="1" data-ftoggle="{{isInside profileUser.username user.following}}" data-ftarget="{{profileUser.username}}">Follow</span>
 	{{/isEqual}}
 </div>
 <div class="cardcont">
 	{{#if posts}}
 	{{#each posts}}
-	{{> post this}}
+	{{> post this user=../user}}
 	{{/each}}
 	{{else}}
 	<div class="card load">There are no notes</div>

@@ -7,8 +7,12 @@ var auth = require("../middlewares/auth.js");
 
 router.get("/", function(req, res) {
     if (req.user) {
-        res.render("homepage", {
-            user: req.user
+        post.getStream(req.user.following)
+        .then(function(posts) {
+            res.render("homepage", {
+                user: req.user,
+                posts: posts
+            });
         });
     } else {
         res.render("landing", {
@@ -57,12 +61,14 @@ router.get("/signout", auth, function(req, res) {
 
 router.post("/signin", passport.authenticate("local-signin", {
     successRedirect: "/",
-    failureRedirect: "/"
+    failureRedirect: "/",
+    failureFlash: true
 }));
 
 router.post("/signup", passport.authenticate("local-signup", {
     successRedirect: "/",
-    failureRedirect: "/"
+    failureRedirect: "/",
+    failureFlash: true
 }));
 
 /* 404 & 500 */
