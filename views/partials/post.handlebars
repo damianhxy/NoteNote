@@ -1,12 +1,12 @@
 <div class="card">
-    <div class="cardpic" style="background:url(https://api.adorable.io/avatars/285/{{this.username}}.png) center no-repeat;background-size:cover"></div>
+    <div class="cardpic" style="background-image: url(https://api.adorable.io/avatars/285/{{this.username}}.png)"></div>
     <p class="cardname">
         <a href="/users/{{this.username}}">{{this.username}}</a>
     </p>
     <p class="carddate">{{this.datePretty}}</p>
     <p class="cardcaption">{{this.description}}</p>
     <a class="cardpreview" href="{{this.path}}">
-        <i class="fa {{fileType this.path}}"></i>
+        <i class="fa fa-{{fileType this.path}}"></i>
         <span>{{this.name}}</span>
     </a>
     <div class="cardtags">

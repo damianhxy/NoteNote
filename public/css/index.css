@@ -44,7 +44,9 @@ body{
 	width: 4em;
 	border-radius: 2em;
 	border: 3px #fff solid;
-	background: #a7d3ef; // Placeholder
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 }
 
 .card .cardname{
