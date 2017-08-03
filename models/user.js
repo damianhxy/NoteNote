@@ -31,12 +31,12 @@ exports.authenticate = function(username, password) {
     return users.findOneAsync({ username: username })
     .then(function(user) {
         if (!user) throw Error("User does not exist");
-        return bcryptjs.compareAsync(password, user.hash);
+        return bcryptjs.compareAsync(password, user.hash)
+        .then(function(res) {
+            if (!res) throw Error("Wrong password");
+            return user;
+        });
     })
-    .then(function(res) {
-        if (!res) throw Error("Wrong password");
-        return user;
-    });
 };
 
 // To Do: Check Existence of user
