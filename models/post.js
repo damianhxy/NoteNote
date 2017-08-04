@@ -50,6 +50,27 @@ exports.delete = function(ID, username) {
     .then(posts.removeAsync({ _id: ID }));
 }
 
+exports.vote = function(ID, username, value) {
+    return posts.findOneAsync({ _id: ID })
+    .then(function(post) {
+        var oldValue = 0;
+        if (post.upvotes.indexOf(username) !== -1) {
+            post.upvotes.splice(post.upvotes.indexOf(username), 1);
+            oldValue = 1;
+        } else if (post.downvotes.indexOf(username) !== -1) {
+            post.downvotes.splice(post.downvotes.indexOf(username), 1);
+            oldValue = -1;
+        }
+        if (value === 1) {
+            post.upvotes.push(username);
+        } else if (value === -1) {
+            post.downvotes.push(username);
+        }
+        post.karma += value - oldValue;
+        return posts.updateAsync({ _id: ID }, post);
+    });
+};
+
 exports.getStream = function(following, start, end) {
     return posts.find({
         $where: function() {

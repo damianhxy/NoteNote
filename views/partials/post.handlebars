@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" data-postid="{{this._id}}">
     <div class="cardpic" style="background-image: url(https://api.adorable.io/avatars/285/{{this.username}}.png)"></div>
     <p class="cardname">
         <a href="/users/{{this.username}}">{{this.username}}</a>
@@ -16,9 +16,9 @@
         {{/each}}
     </div>
     <div class="cardcontrols">
-        <span>{{this.karma}}</span>
-        <a class="cardup" data-value="+1" data-toggle="{{isInside ../user.username this.upvotes}}" href="#"><i class="fa fa-arrow-up"></i></a>
-        <a class="carddown" data-value="-1" data-toggle="{{isInside ../user.username this.downvotes}}" href="#"><i class="fa fa-arrow-down"></i></a>
+        <span class="cardkarma">{{this.karma}}</span>
+        <a class="cardup" data-value="1" data-toggle="{{isInside user.username this.upvotes}}" href="#"><i class="fa fa-arrow-up"></i></a>
+        <a class="carddown" data-value="-1" data-toggle="{{isInside user.username this.downvotes}}" href="#"><i class="fa fa-arrow-down"></i></a>
         <a class="cardlink" href="/posts/{{this._id}}"><i class="fa fa-link"></i></a>
     </div>
     <div class="cardcomments">
@@ -36,9 +36,9 @@
     </div>
     <div class="cardcom">
         <textarea placeholder="Leave a comment..."></textarea>
-        <a href="#" class="comsubmit" data-ctarget="{{this._id}}">Add Comment <i class="fa fa-arrow-right"></i></a>
+        <a href="#" class="comsubmit">Add Comment <i class="fa fa-arrow-right"></i></a>
     </div>
     {{#isEqual user.username this.username}}
-    <i class="close" data-dtarget="{{this._id}}"><i class="fa fa-close"></i></i>
+    <i class="close"><i class="fa fa-close"></i></i>
     {{/isEqual}}
 </div>

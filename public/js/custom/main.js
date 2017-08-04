@@ -4,16 +4,55 @@ $(function() {
     // Delete Post
     $(".close").click(function() {
         if (confirm("Are you sure?")) {
-            var dtarget = $(this).data("dtarget");
+            var $card = $(this).closest(".card");
+            var dtarget = $card.data("postid");
             $.ajax({
                 url: "/posts/" + dtarget,
                 type: "DELETE",
                 success: function() {
-                    location.reload();
+                    $card.remove();
+                    if (!$("[data-postID]").length)
+                        location.reload();
                 }
             });
         }
     })
 
     // Voting on Posts
+    $("[data-postID]").each(function(i, e) {
+        var userVote = 0;
+        if ($(e).find(".cardup").data("toggle"))
+            userVote = 1;
+        if ($(e).find(".carddown").data("toggle"))
+            userVote = -1;
+        $(e).attr("data-uservote", userVote);
+    });
+
+    $("[data-toggle]").click(function(e) {
+        e.preventDefault();
+        var $card = $(this).closest(".card");
+        var userVote = $card.attr("data-uservote");
+        var $karma = $card.find(".cardkarma");
+        var newVote = $(this).data("value");
+        // Clear both
+        var $toggles = $card.find("[data-toggle]");
+        var wasToggled = $(this).attr("data-toggle") === "true"; // attr gives string
+        $toggles.attr("data-toggle", false);
+        if (wasToggled) {
+            $.post("/posts/vote/" + $card.data("postid"), { val: 0 })
+            .then(function() {
+                $karma.text(parseInt($karma.text()) - userVote);
+                $card.attr("data-uservote", 0);
+            });
+        } else {
+            $.post("/posts/vote/" + $card.data("postid"), { val: newVote })
+            .then(function() {
+                $toggle = $card.find("[data-value='" + newVote + "']");
+                $toggle.attr("data-toggle", true);
+                $karma.text(parseInt($karma.text()) + (newVote - userVote));
+                $card.attr("data-uservote", newVote);
+            });
+        }
+
+    });
 });

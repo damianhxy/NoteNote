@@ -13,7 +13,6 @@ router.get("/upload", auth, function(req, res) {
 router.post("/upload", auth, function(req, res) {
     upload.single("file")(req, res, function(err) {
         if (err) {
-            console.error(err.message);
             req.flash(err.message);
             res.status(400).redirect("/posts/upload");
         } else {
@@ -27,8 +26,10 @@ router.post("/upload", auth, function(req, res) {
 });
 
 router.post("/vote/:id", auth, function(req, res) {
-    var nval = req.body.val;
-    // WIP
+    post.vote(req.params.id, req.user.username, parseInt(req.body.val))
+    .then(function() {
+        res.end();
+    });
 });
 
 router.delete("/:id", auth, function(req, res) {

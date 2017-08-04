@@ -152,6 +152,11 @@ body{
 	color: #fff;
 }
 
+.card .cardup[data-toggle='true'],
+.card .carddown[data-toggle='true']{
+	color: #fff;
+}
+
 .card .close{
 	cursor: pointer;
 	position: absolute;
