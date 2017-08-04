@@ -3,6 +3,7 @@ var router = express.Router();
 var auth = require("../middlewares/auth.js");
 var upload = require("../middlewares/upload.js");
 var post = require("../models/post.js");
+var user = require("../models/user.js");
 
 router.get("/upload", auth, function(req, res) {
     res.render("upload", {
@@ -27,6 +28,9 @@ router.post("/upload", auth, function(req, res) {
 
 router.post("/vote/:id", auth, function(req, res) {
     post.vote(req.params.id, req.user.username, parseInt(req.body.val))
+    .then(function([username, delta]) {
+        return user.updateKarma(username, delta);
+    })
     .then(function() {
         res.end();
     });

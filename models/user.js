@@ -65,6 +65,14 @@ exports.addFollow = function(follower, following) {
     });
 };
 
+exports.updateKarma = function(username, delta) {
+    return users.findOneAsync({ username: username })
+    .then(function(user) {
+        user.karma += delta;
+        return users.updateAsync({ username: username }, user);
+    });
+};
+
 exports.get = function(username) {
     return users.findOneAsync({ username: username });
 };

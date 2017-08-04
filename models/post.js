@@ -67,7 +67,10 @@ exports.vote = function(ID, username, value) {
             post.downvotes.push(username);
         }
         post.karma += value - oldValue;
-        return posts.updateAsync({ _id: ID }, post);
+        return posts.updateAsync({ _id: ID }, post)
+        .then(function() {
+            return [post.username, value - oldValue];
+        });
     });
 };
 
