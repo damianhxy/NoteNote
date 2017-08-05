@@ -2,7 +2,7 @@
 	<div class="card searchbar"><form method="GET" action="/posts/search"><i class="fa fa-search"></i><input type="text" placeholder="Search for notes..." name="query"><a href="#" onclick="document.forms[0].submit()"><i class="fa fa-arrow-right"></i></a></form></div>
 	{{#if posts}}
 	{{#each posts}}
-	{{> post this}}
+	{{> post this user=../user}}
 	{{/each}}
 	{{else}}
 	<div class="card load">There are no notes</div>
