@@ -100,7 +100,8 @@ module.exports = function(app, express) {
             add: require("../helpers/add.js")
         },
         partials: {
-            post: require("../views/partials/post.handlebars")
+            post: require("../views/partials/post.handlebars"),
+            comment: require("../views/partials/comment.handlebars")
         }
     });
 

@@ -11,7 +11,7 @@ router.get("/upload", auth, function(req, res) {
     });
 });
 
-router.post("/upload", auth, function(req, res) {
+router.post("/", auth, function(req, res) {
     upload.single("file")(req, res, function(err) {
         if (err) {
             req.flash(err.message);
@@ -26,11 +26,27 @@ router.post("/upload", auth, function(req, res) {
     });
 });
 
+/* Votes */
 router.post("/vote/:id", auth, function(req, res) {
     post.vote(req.params.id, req.user.username, parseInt(req.body.val))
     .then(function([username, delta]) {
         return user.updateKarma(username, delta);
     })
+    .then(function() {
+        res.end();
+    });
+});
+
+/* Comments */
+router.post("/comment/:id", auth, function(req, res) {
+    post.addComment(req.params.id, req.user.username, req.body.content)
+    .then(function() {
+        res.end();
+    });
+});
+
+router.delete("/comment/:id/:index", auth, function(req, res) {
+    post.deleteComment(req.params.id, req.params.index)
     .then(function() {
         res.end();
     });
@@ -58,7 +74,7 @@ router.get("/:id", auth, function(req, res) {
     .then(function(ret) {
         res.render("homepage", {
             user: req.user,
-            posts: [ret]
+            posts: ret ? [ret] : []
         });
     });
 });

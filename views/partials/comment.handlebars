@@ -1,0 +1,7 @@
+<div class="cardcom">
+    <div class="compic" style="background-image: url(https://api.adorable.io/avatars/285/{{this.username}}.png)"></div>
+    <a href="/users/{{this.username}}" class="comname">{{this.username}}</a>
+    <p class="comdate">{{this.datePretty}}</p>
+    <p class="comcontent">{{this.content}}</p>
+    {{#isEqual user.username this.username}}<i class="close com" data-index="{{@index}}"><i class="fa fa-close"></i></i>{{/isEqual}}
+</div>

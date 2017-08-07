@@ -20,7 +20,8 @@ exports.add = function(req) {
         tags: tags,
         karma: 0,
         upvotes: [],
-        downvotes: []
+        downvotes: [],
+        comments: []
     };
     return posts.insertAsync(post);
 };
@@ -71,6 +72,28 @@ exports.vote = function(ID, username, value) {
         .then(function() {
             return [post.username, value - oldValue];
         });
+    });
+};
+
+exports.addComment = function(id, username, content) {
+    var comment = {
+        username: username,
+        content: content,
+        date: moment.tz("Asia/Singapore").format(),
+        datePretty: moment.tz("Asia/Singapore").format(settings.POST_TIME_FORMAT)
+    }
+    return posts.findOneAsync({ _id: id })
+    .then(function(post) {
+        post.comments.push(comment);
+        return posts.updateAsync({ _id: id }, post);
+    });
+}
+
+exports.deleteComment = function(id, index) {
+    return posts.findOneAsync({ _id: id })
+    .then(function(post) {
+        post.comments.splice(index, 1);
+        return posts.updateAsync({ _id: id }, post);
     });
 };
 

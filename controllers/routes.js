@@ -7,7 +7,7 @@ var auth = require("../middlewares/auth.js");
 
 router.get("/", function(req, res) {
     if (req.user) {
-        post.getStream(req.user.following)
+        post.getStream(req.user.following, 0, 19)
         .then(function(posts) {
             res.render("homepage", {
                 user: req.user,
@@ -50,7 +50,7 @@ router.get("/leaderboard", function(req, res) {
 /* User */
 router.use("/users", require("./users.js"));
 
-/* Posts */
+/* Posts + Votes + Comments */
 router.use("/posts", require("./posts.js"));
 
 /* Signin / Signout */
