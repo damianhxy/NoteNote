@@ -21,7 +21,7 @@ router.get("/:profile", auth, function(req, res) {
     })
     .catch(function(err) {
         console.error(err.message);
-        req.flash("error", err.message);
+        req.session.error = err.message;
         res.redirect(req.header.referrer || "/");
     });
 });

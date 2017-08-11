@@ -9,7 +9,6 @@ var nedbStore = require("express-nedb-session")(session);
 var passport = require("passport");
 var dateFormat = require("dateformat");
 var settings = require("./settings.js");
-var flash = require("express-flash");
 
 var user = require("../models/user.js");
 
@@ -41,7 +40,6 @@ module.exports = function(app, express) {
     }));
     app.use(passport.initialize());
     app.use(passport.session());
-    app.use(flash());
 
     // Strategies
     passport.use("local-signin", new localStrategy(
@@ -54,7 +52,8 @@ module.exports = function(app, express) {
             })
             .catch(function(err) {
                 console.error(err.message);
-                done(null, false, { message: err.message });
+                req.session.error = err.message;
+                done(null, false);
             });
         }
     ));
@@ -69,7 +68,8 @@ module.exports = function(app, express) {
             })
             .catch(function(err) {
                 console.error(err.message);
-                done(null, false, { message: err.message });
+                req.session.error = err.message;
+                done(null, false);
             });
         }
     ));
@@ -101,7 +101,8 @@ module.exports = function(app, express) {
         },
         partials: {
             post: require("../views/partials/post.handlebars"),
-            comment: require("../views/partials/comment.handlebars")
+            comment: require("../views/partials/comment.handlebars"),
+            alert: require("../views/partials/alert.handlebars")
         }
     });
 

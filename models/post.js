@@ -23,7 +23,10 @@ exports.add = function(req) {
         downvotes: [],
         comments: []
     };
-    return posts.insertAsync(post);
+    return posts.insertAsync(post)
+    .then(function(obj) {
+        return obj._id;
+    });
 };
 
 exports.search = function(search) {

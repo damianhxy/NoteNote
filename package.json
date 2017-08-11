@@ -22,7 +22,6 @@
     "console-stamp": "^0.2.5",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "express-flash": "0.0.2",
     "express-handlebars": "^3.0.0",
     "express-nedb-session": "^0.1.1",
     "express-session": "^1.13.0",

@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/css/ohsnap.css">
+<script src="/js/ohsnap.min.js"></script>
+<div id="ohsnap"></div>
+<script>
+$(function() {
+    {{#if error}}
+        ohSnap("{{error}}", { color: "red" });
+    {{else if success}}
+        ohSnap("{{success}}", { color: "green" });
+    {{/if}}
+});
+</script>

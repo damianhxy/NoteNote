@@ -4,6 +4,8 @@ var passport = require("passport");
 var user = require("../models/user.js");
 var post = require("../models/post.js");
 var auth = require("../middlewares/auth.js");
+var notification = require("../middlewares/notification.js");
+router.use(notification);
 
 router.get("/", function(req, res) {
     if (req.user) {
@@ -59,16 +61,31 @@ router.get("/signout", auth, function(req, res) {
     res.redirect("/");
 });
 
-router.post("/signin", passport.authenticate("local-signin", {
-    successRedirect: "/",
-    failureRedirect: "/",
-    failureFlash: true
-}));
+router.post("/signin", function(req, res, next) {
+    passport.authenticate("local-signin", function(err, user) {
+        if (err) return next(err);
+        if (!user)
+            return res.status(400).redirect(req.headers.referer || "/");
+        return req.login(user, function(err) {
+            if (err) return next(err);
+            res.redirect(req.headers.referer || "/");
+        });
+    })(req, res, next);
+});
+
+router.post("/signup", auth, function(req, res, next) {
+    passport.authenticate("local-signup", function(err, user, info) {
+        if (err) return next(err);
+        req.login(user, function(err) {
+            if (err) return next(err);
+            res.redirect(req.headers.referer || "/");
+        });
+    })(req, res);
+});
 
 router.post("/signup", passport.authenticate("local-signup", {
     successRedirect: "/",
-    failureRedirect: "/",
-    failureFlash: true
+    failureRedirect: "/register"
 }));
 
 /* 404 & 500 */

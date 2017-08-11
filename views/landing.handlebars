@@ -13,7 +13,8 @@
 	<link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/css/lemonade.min.css">
-	<link href='http://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<script src="/js/jquery-3.0.0.min.js"></script>
 </head>
 <body>
 	<main>
@@ -27,8 +28,8 @@
 				<div class="bit-2 right">
 					<form method="POST" action="/signin">
 						<p class="m login">Login</p>
-						<input type="text" placeholder="username" class="text" name="username">
-						<input type="password" placeholder="password" class="text" name="password">
+						<input type="text" placeholder="username" class="text" name="username" required>
+						<input type="password" placeholder="password" class="text" name="password" required>
 						<input type="submit" class="button" value="Submit">
 						<p class="or">or</p>
 						<a class="button" href="/register">new account</a>
@@ -56,5 +57,6 @@
 			<div>&nbsp;</div>
 		</section>
 	</main>
+	{{> alert this}}
 </body>
 </html>

@@ -36,7 +36,7 @@ exports.authenticate = function(username, password) {
             if (!res) throw Error("Wrong password");
             return user;
         });
-    })
+    });
 };
 
 // To Do: Check Existence of user

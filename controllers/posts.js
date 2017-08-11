@@ -14,13 +14,12 @@ router.get("/upload", auth, function(req, res) {
 router.post("/", auth, function(req, res) {
     upload.single("file")(req, res, function(err) {
         if (err) {
-            req.flash(err.message);
+            req.session.error = err.message;
             res.status(400).redirect("/posts/upload");
         } else {
             post.add(req)
-            .then(function() {
-                req.flash("success", "Notes uploaded");
-                res.redirect("/posts/upload");
+            .then(function(id) {
+                res.redirect("/posts/" + id);
             });
         }
     });
