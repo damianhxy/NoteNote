@@ -73,7 +73,7 @@ router.post("/signin", function(req, res, next) {
     })(req, res, next);
 });
 
-router.post("/signup", auth, function(req, res, next) {
+router.post("/signup", function(req, res, next) {
     passport.authenticate("local-signup", function(err, user, info) {
         if (err) return next(err);
         req.login(user, function(err) {
@@ -82,11 +82,6 @@ router.post("/signup", auth, function(req, res, next) {
         });
     })(req, res);
 });
-
-router.post("/signup", passport.authenticate("local-signup", {
-    successRedirect: "/",
-    failureRedirect: "/register"
-}));
 
 /* 404 & 500 */
 router.use(function(req, res) {
