@@ -1,3 +1,3 @@
-module.exports = function(a) {
-    return JSON.stringify(a);
+module.exports = function (a) {
+  return JSON.stringify(a);
 };

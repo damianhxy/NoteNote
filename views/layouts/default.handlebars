@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="csrf-token" content="{{csrfToken}}">
 	<title>notenote</title>
 	<link rel="author" href="/humans.txt">
 	<link rel="icon" href="/favicon.ico">
@@ -16,6 +17,13 @@
 	<link rel="stylesheet" href="/css/lemonade.min.css">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<script src="/js/jquery-3.0.0.min.js"></script>
+	<script>
+		$.ajaxSetup({
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			}
+		});
+	</script>
 </head>
 <body>
 	<nav id="sidebar-left">
@@ -29,14 +37,12 @@
 		<a href="/leaderboard"><i class="fa fa-trophy"></i> Leaderboard</a>
 		<a href="/users/{{user.username}}"><i class="fa fa-user"></i> {{user.username}}</a>
 		<a href="/posts/upload"><i class="fa fa-plus"></i> Upload Notes</a>
-		<a href="/questions/add"><i class="fa fa-question-circle"></i> Ask Questions</a>
 		<a href="/signout"><i class="fa fa-sign-out"></i> Sign Out</a>
 	</nav>
 	<section class="cardbox">
 		{{{body}}}
 	</section>
 	<div id="branding"><i class="fa fa-bars"></i></div>
-	<script src="/js/moment.min.js"></script>
 	<script src="/js/custom/main.js"></script>
 	<script src="/js/custom/responsive.js"></script>
 	<link rel="stylesheet" href="/css/ohsnap.css">

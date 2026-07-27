@@ -1,81 +1,122 @@
-var express = require("express");
-var router = express.Router();
-var auth = require("../middlewares/auth.js");
-var upload = require("../middlewares/upload.js");
-var post = require("../models/post.js");
-var user = require("../models/user.js");
+const express = require("express");
+const { body, validationResult } = require("express-validator");
+const router = express.Router();
+const auth = require("../middlewares/auth.js");
+const upload = require("../middlewares/upload.js");
+const { csrfValidate } = require("../middlewares/csrf.js");
+const post = require("../models/post.js");
+const user = require("../models/user.js");
 
-router.get("/upload", auth, function(req, res) {
-    res.render("upload", {
-        user: req.user
-    });
+router.get("/upload", auth, function (req, res) {
+  res.render("upload", {
+    user: req.user,
+  });
 });
 
-router.post("/", auth, function(req, res) {
-    upload.single("file")(req, res, function(err) {
-        if (err) {
-            req.session.error = err.message;
-            res.status(400).redirect("/posts/upload");
-        } else {
-            post.add(req)
-            .then(function(id) {
-                res.redirect("/posts/" + id);
-            });
-        }
-    });
+router.post("/", auth, csrfValidate, function (req, res) {
+  upload.single("file")(req, res, function (err) {
+    if (err) {
+      req.session.error = err.message;
+      return res.status(400).redirect("/posts/upload");
+    }
+    if (!req.file) {
+      req.session.error = "No file uploaded";
+      return res.status(400).redirect("/posts/upload");
+    }
+    post
+      .add(req)
+      .then(function (id) {
+        res.redirect("/posts/" + id);
+      })
+      .catch(function (uploadErr) {
+        console.error(uploadErr.message);
+        req.session.error = "Failed to upload post";
+        res.status(500).redirect("/posts/upload");
+      });
+  });
 });
 
 /* Votes */
-router.post("/vote/:id", auth, function(req, res) {
-    post.vote(req.params.id, req.user.username, parseInt(req.body.val))
-    .then(function([username, delta]) {
-        return user.updateKarma(username, delta);
-    })
-    .then(function() {
-        res.end();
-    });
+router.post("/vote/:id", auth, csrfValidate, async function (req, res) {
+  try {
+    const [username, delta] = await post.vote(
+      req.params.id,
+      req.user.username,
+      parseInt(req.body.val),
+    );
+    await user.updateKarma(username, delta);
+    res.end();
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Vote failed" });
+  }
 });
 
 /* Comments */
-router.post("/comment/:id", auth, function(req, res) {
-    post.addComment(req.params.id, req.user.username, req.body.content)
-    .then(function() {
-        res.end();
-    });
+router.post(
+  "/comment/:id",
+  auth,
+  csrfValidate,
+  body("content").trim().isLength({ min: 1, max: 1000 }).escape(),
+  async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: "Invalid comment" });
+    }
+    try {
+      await post.addComment(req.params.id, req.user.username, req.body.content);
+      res.end();
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Failed to add comment" });
+    }
+  },
+);
+
+router.delete("/comment/:id/:index", auth, csrfValidate, async function (req, res) {
+  try {
+    await post.deleteComment(req.params.id, req.params.index);
+    res.end();
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Failed to delete comment" });
+  }
 });
 
-router.delete("/comment/:id/:index", auth, function(req, res) {
-    post.deleteComment(req.params.id, req.params.index)
-    .then(function() {
-        res.end();
-    });
+router.delete("/:id", auth, csrfValidate, async function (req, res) {
+  try {
+    await post.delete(req.params.id, req.user.username);
+    res.end();
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Failed to delete post" });
+  }
 });
 
-router.delete("/:id", auth, function(req, res) {
-    post.delete(req.params.id, req.user.username)
-    .then(function() {
-        res.end();
+router.get("/search", auth, async function (req, res) {
+  try {
+    const posts = await post.search(req.query.query || "");
+    res.render("homepage", {
+      user: req.user,
+      posts: posts,
     });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
-router.get("/search", auth, function(req, res) {
-    post.search(req.query.query)
-    .then(function(posts) {
-        res.render("homepage", {
-            user: req.user,
-            posts: posts
-        });
+router.get("/:id", auth, async function (req, res) {
+  try {
+    const ret = await post.get(req.params.id);
+    res.render("homepage", {
+      user: req.user,
+      posts: ret ? [ret] : [],
     });
-});
-
-router.get("/:id", auth, function(req, res) {
-    post.get(req.params.id)
-    .then(function(ret) {
-        res.render("homepage", {
-            user: req.user,
-            posts: ret ? [ret] : []
-        });
-    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 module.exports = router;

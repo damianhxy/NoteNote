@@ -1,0 +1,7 @@
+node_modules
+public/js/jquery-3.0.0.min.js
+public/js/ohsnap.min.js
+public/css/lemonade.min.css
+public/css/font-awesome
+package-lock.json
+*.handlebars

@@ -2,3 +2,6 @@ node_modules
 nedb_sessionstore
 uploads
 database
+.env
+*.db
+*.log

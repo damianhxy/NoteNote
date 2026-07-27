@@ -1,10 +1,11 @@
 <div class="card add">
 	<form method="POST" action="/posts" enctype="multipart/form-data">
+		<input type="hidden" name="_csrf" value="{{csrfToken}}">
 		<p class="addnew"><i class="fa fa-plus"></i> Upload Notes</p>
-		<textarea class="addtext" placeholder="A brief description" name="text"></textarea>
+		<textarea class="addtext" placeholder="A brief description" name="text" maxlength="2000"></textarea>
 		<input type="file" class="addfile" id="file" name="file" required>
-		<span id="addbtn" class="addbutton">Upload File...</span><input type="text" class="addfilename" placeholder="File Name" name="name"></span>
-		<input type="text" class="addtext" placeholder="Tag your notes (comma separated)" name="tags">
+		<span id="addbtn" class="addbutton">Upload File...</span><input type="text" class="addfilename" placeholder="File Name" name="name" required maxlength="100">
+		<input type="text" class="addtext" placeholder="Tag your notes (comma separated)" name="tags" maxlength="200">
 		<input type="submit" class="addbutton" value="Upload">
 	</form>
 </div>

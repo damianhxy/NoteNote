@@ -1,6 +1,7 @@
-var express = require("express");
-var app = express();
-var settings = require("./controllers/settings.js");
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const settings = require("./controllers/settings.js");
 
 require("./controllers/config.js")(app, express);
 app.use(require("./controllers/routes.js"));
