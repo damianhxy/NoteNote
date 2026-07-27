@@ -1,7 +1,7 @@
 node_modules
-nedb_sessionstore
 uploads
-database
+database/*.db
+database/*.db-wal
+database/*.db-shm
 .env
-*.db
 *.log

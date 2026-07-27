@@ -40,11 +40,11 @@ function getStreamStmt(following) {
 }
 
 function formatDate(date) {
-  return formatInTimeZone(date || new Date(), "Asia/Singapore", "yyyy-MM-dd'T'HH:mm:ssXXX");
+  return formatInTimeZone(date || new Date(), settings.TIMEZONE, "yyyy-MM-dd'T'HH:mm:ssXXX");
 }
 
 function formatDatePretty(date) {
-  return formatInTimeZone(date || new Date(), "Asia/Singapore", settings.POST_TIME_FORMAT);
+  return formatInTimeZone(date || new Date(), settings.TIMEZONE, settings.POST_TIME_FORMAT);
 }
 
 function generateId() {

@@ -25,6 +25,7 @@ exports.ALLOWED_MIME_TYPES = [
   "application/x-rar-compressed",
   "application/x-7z-compressed",
 ];
+exports.TIMEZONE = "Asia/Singapore";
 exports.ALLOWED_EXTENSIONS = [
   ".pdf",
   ".doc",

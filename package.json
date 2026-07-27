@@ -17,11 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://damianhxy@bitbucket.org/damianhxy/hackathon.git"
+    "url": ""
   },
   "author": "Damian Ho, Gui Ming Jiang",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/damianhxy/hackathon#readme",
+  "homepage": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^13.0.1",

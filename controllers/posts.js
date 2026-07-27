@@ -83,16 +83,6 @@ router.delete("/comment/:id/:index", auth, csrfValidate, async function (req, re
   }
 });
 
-router.delete("/:id", auth, csrfValidate, async function (req, res) {
-  try {
-    await post.delete(req.params.id, req.user.username);
-    res.end();
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: "Failed to delete post" });
-  }
-});
-
 router.get("/search", auth, async function (req, res) {
   try {
     const posts = await post.search(req.query.query || "");
@@ -102,7 +92,18 @@ router.get("/search", auth, async function (req, res) {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Internal Server Error");
+    req.session.error = "Search failed";
+    res.redirect("/");
+  }
+});
+
+router.delete("/:id", auth, csrfValidate, async function (req, res) {
+  try {
+    await post.delete(req.params.id, req.user.username);
+    res.end();
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Failed to delete post" });
   }
 });
 

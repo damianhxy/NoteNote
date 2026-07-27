@@ -75,7 +75,7 @@ module.exports = function (app, express) {
     new localStrategy({ passReqToCallback: true }, async function (req, username, password, done) {
       try {
         const userObj = await user.authenticate(username, password);
-        console.log("Signed in", username);
+        console.info("Signed in", username);
         done(null, userObj);
       } catch (err) {
         console.error(err.message);
@@ -90,7 +90,7 @@ module.exports = function (app, express) {
     new localStrategy({ passReqToCallback: true }, async function (req, username, password, done) {
       try {
         const userObj = await user.add(req.body, username, password);
-        console.log("Added user", username);
+        console.info("Added user", username);
         done(null, userObj);
       } catch (err) {
         console.error(err.message);
