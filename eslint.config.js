@@ -1,68 +1,46 @@
+"use strict";
+
+const js = require("@eslint/js");
+const globals = require("globals");
+
 module.exports = [
+  js.configs.recommended,
   {
-    files: ["**/*.js"],
-    ignores: ["public/js/jquery-3.0.0.min.js", "public/js/ohsnap.min.js"],
+    ignores: [
+      "node_modules/**",
+      "database/**",
+      "public/js/jquery-3.0.0.min.js",
+      "public/js/ohsnap.min.js",
+    ],
+  },
+  {
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: "commonjs",
       globals: {
-        require: "readonly",
-        module: "readonly",
-        exports: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        process: "readonly",
-        console: "readonly",
-        Buffer: "readonly",
-        setTimeout: "readonly",
-        setInterval: "readonly",
-        clearTimeout: "readonly",
-        clearInterval: "readonly",
+        ...globals.node,
       },
     },
     rules: {
-      "no-undef": "error",
-      "no-redeclare": "error",
-      "no-dupe-keys": "error",
-      "no-duplicate-case": "error",
-      "no-unreachable": "error",
-      "no-extra-semi": "error",
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
+      "no-console": "off",
+      eqeqeq: "error",
       "no-var": "error",
-      eqeqeq: "warn",
-      "no-empty": "warn",
-      "no-constant-condition": "warn",
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "prefer-const": "warn",
-      "no-shadow": "warn",
+      "prefer-const": "error",
+      "no-throw-literal": "error",
     },
   },
   {
     files: ["public/js/custom/**/*.js"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: "script",
       globals: {
+        ...globals.browser,
         $: "readonly",
         jQuery: "readonly",
         ohSnap: "readonly",
-        window: "readonly",
-        document: "readonly",
-        confirm: "readonly",
-        location: "readonly",
-        console: "readonly",
       },
-    },
-    rules: {
-      "no-undef": "error",
-      "no-redeclare": "error",
-      "no-dupe-keys": "error",
-      "no-extra-semi": "error",
-      "no-var": "error",
-      eqeqeq: "warn",
-      "no-empty": "warn",
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "prefer-const": "warn",
-      "no-shadow": "warn",
     },
   },
 ];
