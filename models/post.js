@@ -166,7 +166,7 @@ exports.vote = function (ID, username, value) {
   }
 
   const newKarma = post.karma + (value - oldValue);
-  updateStmt.run(newKarma, JSON.stringify(upvotes), JSON.stringify(downvotes), post.comments);
+  updateStmt.run(newKarma, JSON.stringify(upvotes), JSON.stringify(downvotes), post.comments, ID);
   return [post.username, value - oldValue];
 };
 
@@ -181,7 +181,7 @@ exports.addComment = function (id, username, content) {
     date: formatDate(),
     datePretty: formatDatePretty(),
   });
-  updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments));
+  updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments), id);
 };
 
 exports.deleteComment = function (id, index) {
@@ -190,7 +190,7 @@ exports.deleteComment = function (id, index) {
 
   const comments = parseJsonArray(post.comments);
   comments.splice(parseInt(index, 10), 1);
-  updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments));
+  updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments), id);
 };
 
 exports.getStream = function (following, start, end) {

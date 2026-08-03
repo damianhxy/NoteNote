@@ -1,4 +1,4 @@
-const EventEmitter = require("events");
+const session = require("express-session");
 const db = require("./index.js");
 
 db.exec(`
@@ -16,7 +16,7 @@ const cleanupStmt = db.prepare("DELETE FROM sessions WHERE expires < ?");
 
 const CLEANUP_INTERVAL = 3600000;
 
-class SQLiteSessionStore extends EventEmitter {
+class SQLiteSessionStore extends session.Store {
   constructor() {
     super();
     this._cleanupInterval = setInterval(() => {

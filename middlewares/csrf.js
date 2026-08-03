@@ -1,30 +1,35 @@
-const crypto = require("crypto");
+const { csrfSync } = require("csrf-sync");
 
-const TOKEN_LENGTH = 32;
-
-function generateToken(session) {
-  if (!session.csrfToken) {
-    session.csrfToken = crypto.randomBytes(TOKEN_LENGTH).toString("hex");
-  }
-  return session.csrfToken;
-}
+const csrfProtection = csrfSync({
+  getTokenFromRequest: function (req) {
+    return req.body._csrf || req.headers["x-csrf-token"];
+  },
+});
 
 function csrfMiddleware(req, res, next) {
-  res.locals.csrfToken = generateToken(req.session);
+  res.locals.csrfToken = csrfProtection.generateToken(req);
   next();
 }
 
 function csrfValidate(req, res, next) {
-  const token = req.body._csrf || req.headers["x-csrf-token"];
-  if (!token || !req.session.csrfToken) {
-    return res.status(403).json({ error: "CSRF token missing" });
+  if (req.is("multipart/form-data")) {
+    return next();
   }
-  const tokenBuf = Buffer.from(token, "hex");
-  const sessionBuf = Buffer.from(req.session.csrfToken, "hex");
-  if (tokenBuf.length !== sessionBuf.length || !crypto.timingSafeEqual(tokenBuf, sessionBuf)) {
-    return res.status(403).json({ error: "CSRF token invalid" });
-  }
-  next();
+  return csrfProtection.csrfSynchronisedProtection(req, res, function (err) {
+    if (err) {
+      return res.status(403).json({ error: "CSRF token invalid" });
+    }
+    next();
+  });
 }
 
-module.exports = { csrfMiddleware, csrfValidate };
+function csrfValidateMultipart(req, res, next) {
+  return csrfProtection.csrfSynchronisedProtection(req, res, function (err) {
+    if (err) {
+      return res.status(403).json({ error: "CSRF token invalid" });
+    }
+    next();
+  });
+}
+
+module.exports = { csrfMiddleware, csrfValidate, csrfValidateMultipart };

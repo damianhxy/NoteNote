@@ -3,7 +3,7 @@ const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const auth = require("../middlewares/auth.js");
 const upload = require("../middlewares/upload.js");
-const { csrfValidate } = require("../middlewares/csrf.js");
+const { csrfValidate, csrfValidateMultipart } = require("../middlewares/csrf.js");
 const post = require("../models/post.js");
 const user = require("../models/user.js");
 
@@ -13,28 +13,34 @@ router.get("/upload", auth, function (req, res) {
   });
 });
 
-router.post("/", auth, csrfValidate, function (req, res) {
-  upload.single("file")(req, res, function (err) {
-    if (err) {
-      req.session.error = err.message;
-      return res.status(400).redirect("/posts/upload");
-    }
+router.post(
+  "/",
+  auth,
+  function (req, res, next) {
+    upload.single("file")(req, res, function (err) {
+      if (err) {
+        req.session.error = err.message;
+        return res.status(400).redirect("/posts/upload");
+      }
+      next();
+    });
+  },
+  csrfValidateMultipart,
+  function (req, res) {
     if (!req.file) {
       req.session.error = "No file uploaded";
       return res.status(400).redirect("/posts/upload");
     }
-    post
-      .add(req)
-      .then(function (id) {
-        res.redirect("/posts/" + id);
-      })
-      .catch(function (uploadErr) {
-        console.error(uploadErr.message);
-        req.session.error = "Failed to upload post";
-        res.status(500).redirect("/posts/upload");
-      });
-  });
-});
+    try {
+      const id = post.add(req);
+      res.redirect("/posts/" + id);
+    } catch (uploadErr) {
+      console.error(uploadErr.message);
+      req.session.error = "Failed to upload post";
+      res.status(500).redirect("/posts/upload");
+    }
+  },
+);
 
 /* Votes */
 router.post("/vote/:id", auth, csrfValidate, async function (req, res) {
