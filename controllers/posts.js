@@ -45,11 +45,11 @@ router.post(
 /* Votes */
 router.post("/vote/:id", auth, csrfValidate, async function (req, res) {
   try {
-    const [username, delta] = await post.vote(
-      req.params.id,
-      req.user.username,
-      parseInt(req.body.val),
-    );
+    const value = Number(req.body.val);
+    if (![-1, 0, 1].includes(value)) {
+      return res.status(400).json({ error: "Invalid vote" });
+    }
+    const [username, delta] = await post.vote(req.params.id, req.user.username, value);
     await user.updateKarma(username, delta);
     res.end();
   } catch (err) {
@@ -81,11 +81,11 @@ router.post(
 
 router.delete("/comment/:id/:index", auth, csrfValidate, async function (req, res) {
   try {
-    await post.deleteComment(req.params.id, req.params.index);
+    await post.deleteComment(req.params.id, req.params.index, req.user.username);
     res.end();
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Failed to delete comment" });
+    res.status(err.status || 500).json({ error: "Failed to delete comment" });
   }
 });
 
