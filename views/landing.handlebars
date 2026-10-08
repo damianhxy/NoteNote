@@ -16,13 +16,7 @@
 	<link rel="stylesheet" href="/css/lemonade.min.css">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<script src="/js/jquery-3.0.0.min.js"></script>
-	<script>
-		$.ajaxSetup({
-			beforeSend: function(xhr) {
-				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-			}
-		});
-	</script>
+	<script src="/js/custom/csrf.js"></script>
 </head>
 <body>
 	<main>

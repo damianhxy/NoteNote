@@ -1,6 +1,12 @@
 $(function () {
   console.info("[info] main.js is now running");
 
+  // Search arrow submits the search form
+  $(".searchsubmit").click(function (e) {
+    e.preventDefault();
+    $(this).closest("form").submit();
+  });
+
   // Delete Post
   $(".close:not(.com)").click(function () {
     if (confirm("Are you sure?")) {
