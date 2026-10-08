@@ -84,6 +84,8 @@ exports.addFollow = async function (follower, following) {
 
   const followerRow = findByUsernameStmt.get(follower);
   if (!followerRow) throw Error("User does not exist");
+  const followingRow = findByUsernameStmt.get(following);
+  if (!followingRow) throw Error("Target user does not exist");
 
   const followingList = parseJsonArray(followerRow.following);
   const idx = followingList.indexOf(following);
@@ -92,11 +94,6 @@ exports.addFollow = async function (follower, following) {
   } else {
     followingList.splice(idx, 1);
   }
-  updateFollowingStmt.run(JSON.stringify(followingList), follower);
-
-  const followingRow = findByUsernameStmt.get(following);
-  if (!followingRow) throw Error("Target user does not exist");
-
   const followersList = parseJsonArray(followingRow.followers);
   const fIdx = followersList.indexOf(follower);
   if (fIdx === -1) {
@@ -104,7 +101,10 @@ exports.addFollow = async function (follower, following) {
   } else {
     followersList.splice(fIdx, 1);
   }
-  updateFollowersStmt.run(JSON.stringify(followersList), following);
+  db.transaction(() => {
+    updateFollowingStmt.run(JSON.stringify(followingList), follower);
+    updateFollowersStmt.run(JSON.stringify(followersList), following);
+  })();
 };
 
 exports.updateKarma = async function (username, delta) {
