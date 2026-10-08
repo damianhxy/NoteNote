@@ -184,12 +184,23 @@ exports.addComment = function (id, username, content) {
   updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments), id);
 };
 
-exports.deleteComment = function (id, index) {
+exports.deleteComment = function (id, index, username) {
   const post = findByIdStmt.get(id);
   if (!post) throw Error("Post not found");
 
   const comments = parseJsonArray(post.comments);
-  comments.splice(parseInt(index, 10), 1);
+  const parsedIndex = Number(index);
+  if (!Number.isInteger(parsedIndex) || parsedIndex < 0 || parsedIndex >= comments.length) {
+    const err = Error("Invalid comment index");
+    err.status = 400;
+    throw err;
+  }
+  if (comments[parsedIndex].username !== username) {
+    const err = Error("Unauthorised");
+    err.status = 403;
+    throw err;
+  }
+  comments.splice(parsedIndex, 1);
   updateStmt.run(post.karma, post.upvotes, post.downvotes, JSON.stringify(comments), id);
 };
 

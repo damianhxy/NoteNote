@@ -81,11 +81,11 @@ router.post(
 
 router.delete("/comment/:id/:index", auth, csrfValidate, async function (req, res) {
   try {
-    await post.deleteComment(req.params.id, req.params.index);
+    await post.deleteComment(req.params.id, req.params.index, req.user.username);
     res.end();
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Failed to delete comment" });
+    res.status(err.status || 500).json({ error: "Failed to delete comment" });
   }
 });
 
