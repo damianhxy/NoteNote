@@ -31,8 +31,8 @@ const updateStmt = db.prepare(
   "UPDATE posts SET karma = ?, upvotes = ?, downvotes = ?, comments = ? WHERE _id = ?",
 );
 const topStmt = db.prepare("SELECT * FROM posts ORDER BY karma DESC LIMIT 20");
-const searchTagsStmt = db.prepare("SELECT * FROM posts WHERE tags LIKE ?");
-const searchDescStmt = db.prepare("SELECT * FROM posts WHERE description LIKE ?");
+const searchTagsStmt = db.prepare("SELECT * FROM posts WHERE tags LIKE ? ESCAPE '\\'");
+const searchDescStmt = db.prepare("SELECT * FROM posts WHERE description LIKE ? ESCAPE '\\'");
 
 function getStreamStmt(following) {
   const placeholders = following.map(() => "?").join(",");
@@ -108,7 +108,7 @@ exports.add = function (req) {
 };
 
 exports.search = function (search) {
-  const pattern = "%" + search.replace(/%/g, "\\%") + "%";
+  const pattern = "%" + search.replace(/[\\%_]/g, "\\$&") + "%";
   const byTags = searchTagsStmt.all(pattern);
   const byDesc = searchDescStmt.all(pattern);
   const seen = new Set();
