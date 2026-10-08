@@ -14,21 +14,30 @@ header {
   box-shadow: 0 3px 0 #a7d3ef;
 }
 
-#sidebar-left a {
+#sidebar-left a,
+#sidebar-left button {
   text-decoration: none;
   display: block;
+  width: 100%;
   padding: 1em;
   color: inherit;
   transition: 200ms;
+  background: none;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
-#sidebar-left a i.fa {
+#sidebar-left a i.fa,
+#sidebar-left button i.fa {
   margin-right: 0.5em;
   width: 1em;
   text-align: center;
 }
 
-#sidebar-left a:hover {
+#sidebar-left a:hover,
+#sidebar-left button:hover {
   background: #e1f0fa;
 }
 

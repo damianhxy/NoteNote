@@ -67,10 +67,14 @@ router.use("/users", require("./users.js"));
 router.use("/posts", require("./posts.js"));
 
 /* Signin / Signout */
-router.get("/signout", auth, function (req, res) {
+router.post("/signout", auth, csrfValidate, function (req, res, next) {
   req.logout(function (err) {
-    if (err) console.error(err.message);
-    res.redirect("/");
+    if (err) return next(err);
+    req.session.destroy(function (destroyErr) {
+      if (destroyErr) return next(destroyErr);
+      res.clearCookie("connect.sid", { path: "/" });
+      res.redirect("/");
+    });
   });
 });
 
