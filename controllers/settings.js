@@ -5,7 +5,15 @@ if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
   process.exit(1);
 }
 
+function parseTrustProxy(value) {
+  if (!value || value === "false") return false;
+  if (value === "true") return true;
+  if (/^\d+$/.test(value)) return Number(value);
+  return value; // comma-separated addresses/subnets or names such as "loopback"
+}
+
 exports.PORT = process.env.PORT || 8080;
+exports.TRUST_PROXY = parseTrustProxy(process.env.TRUST_PROXY);
 exports.SECRET = process.env.SESSION_SECRET;
 exports.TIME_FORMAT = "dd MMM HH:mm:ss";
 exports.POST_TIME_FORMAT = "d MMM yy | HH:mm";
