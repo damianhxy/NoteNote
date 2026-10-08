@@ -63,7 +63,7 @@ router.post(
   "/comment/:id",
   auth,
   csrfValidate,
-  body("content").trim().isLength({ min: 1, max: 1000 }).escape(),
+  body("content").trim().isLength({ min: 1, max: 1000 }),
   async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
