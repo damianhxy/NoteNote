@@ -31,6 +31,12 @@ module.exports = function (app, express) {
   app.enable("case sensitive routing");
   app.enable("strict routing");
   app.disable("x-powered-by");
+  // Session cookies are Secure in production, and the app itself only speaks HTTP, so
+  // production must sit behind an HTTPS proxy that Express is told to trust.
+  app.set("trust proxy", settings.TRUST_PROXY);
+  if (app.get("env") === "production" && !settings.TRUST_PROXY) {
+    console.warn("TRUST_PROXY is not set: no session cookie will be issued in production");
+  }
 
   // Rate limiting
   const authLimiter = rateLimit({
