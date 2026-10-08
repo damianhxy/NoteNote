@@ -4,7 +4,7 @@
   "description": "Share notes and earn karma",
   "main": "app.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.22.2"
   },
   "scripts": {
     "start": "node app.js",
