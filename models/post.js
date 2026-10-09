@@ -94,7 +94,7 @@ exports.add = function (req) {
     id,
     req.user.username,
     req.body.name,
-    req.file.path.slice(6),
+    path.posix.join("/uploads", req.file.filename),
     req.body.text || "",
     formatDate(),
     formatDatePretty(),
@@ -136,7 +136,7 @@ exports.delete = function (ID, username) {
   if (!post) throw Error("Post not found");
   if (post.username !== username) throw Error("Unauthorised");
   const fs = require("fs").promises;
-  fs.unlink(path.join("public", post.path)).catch(() => {});
+  fs.unlink(path.join(settings.UPLOAD_DIR, path.basename(post.path))).catch(() => {});
   deleteStmt.run(ID);
 };
 
