@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
   console.error("FATAL: SESSION_SECRET must be set in .env (min 32 chars)");
@@ -10,6 +11,7 @@ exports.SECRET = process.env.SESSION_SECRET;
 exports.TIME_FORMAT = "dd MMM HH:mm:ss";
 exports.POST_TIME_FORMAT = "d MMM yy | HH:mm";
 exports.FILE_SIZE_LIMIT = 25 * 1024 * 1024;
+exports.UPLOAD_DIR = path.join(__dirname, "..", "public", "uploads");
 exports.ALLOWED_MIME_TYPES = [
   "application/pdf",
   "application/msword",

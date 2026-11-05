@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const auth = require("../middlewares/auth.js");
@@ -26,7 +27,7 @@ router.post(
     });
   },
   csrfValidateMultipart,
-  function (req, res) {
+  async function (req, res) {
     if (!req.file) {
       req.session.error = "No file uploaded";
       return res.status(400).redirect("/posts/upload");
@@ -36,6 +37,9 @@ router.post(
       res.redirect("/posts/" + id);
     } catch (uploadErr) {
       console.error(uploadErr.message);
+      await fs.promises.unlink(req.file.path).catch((err) => {
+        if (err.code !== "ENOENT") console.error(err.message);
+      });
       req.session.error = "Failed to upload post";
       res.status(500).redirect("/posts/upload");
     }
