@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "test": "node --test \"test/**/*.test.js\"",
     "dev": "node --watch app.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
